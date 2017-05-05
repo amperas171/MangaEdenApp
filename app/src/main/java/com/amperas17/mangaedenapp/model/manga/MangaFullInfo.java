@@ -216,4 +216,13 @@ public class MangaFullInfo {
                 ",\n title_kw=" + title_kw +
                 '}';
     }
+
+    public String getCategoriesAsString(){
+        String result = "";
+        result = categories.get(0);
+        for (int i=1;i<categories.size();i++){
+            result += ", " + categories.get(i);
+        }
+        return result;
+    }
 }

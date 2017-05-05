@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"/>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/mangaFullContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/cardview_dark_background"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
+            android:paddingTop="16dp">
+
+            <ImageView
+                android:id="@+id/ivFullMangaImage"
+                android:layout_width="140dp"
+                android:layout_height="170dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:src="@drawable/noimage1"
+                android:scaleType="centerInside"
+                tools:background="@android:color/white"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/tvDescription"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_toEndOf="@+id/ivFullMangaImage"
+                android:layout_toRightOf="@+id/ivFullMangaImage"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/Released"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="8dp"
+                    android:text="Released:"/>
+
+                <TextView
+                    android:id="@+id/tvReleased"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toEndOf="@+id/Categories"
+                    android:layout_toRightOf="@+id/Categories"
+                    tools:text="13.02.2017"/>
+
+                <TextView
+                    android:id="@+id/Hits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvReleased"
+                    android:layout_marginBottom="8dp"
+                    android:text="Rating:"/>
+
+                <TextView
+                    android:id="@+id/tvHits"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvReleased"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toEndOf="@+id/Categories"
+                    android:layout_toRightOf="@+id/Categories"
+                    android:text="15000"/>
+
+                <TextView
+                    android:id="@+id/Author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvHits"
+                    android:layout_marginBottom="8dp"
+                    android:text="Author"/>
+
+                <TextView
+                    android:id="@+id/tvAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvHits"
+                    android:layout_marginBottom="8dp"
+                    android:layout_toEndOf="@+id/Categories"
+                    android:layout_toRightOf="@+id/Categories"
+                    android:text="Name"/>
+
+                <TextView
+                    android:id="@+id/Categories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvAuthor"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:text="Categories"/>
+
+                <TextView
+                    android:id="@+id/tvCategories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvAuthor"
+                    android:layout_toEndOf="@+id/Categories"
+                    android:layout_toRightOf="@+id/Categories"
+                    android:text="Category1, category2, category3"/>
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/tvDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ivFullMangaImage"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="Description Description Description Description Description Description Description \n Description Description"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewChapterList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvDescription"
+                android:layout_marginTop="8dp"
+                android:padding="8dp"/>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+</FrameLayout>

@@ -1,10 +1,16 @@
 package com.amperas17.mangaedenapp.model.manga;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Manga {
+public class Manga implements Parcelable, Comparable<Manga> {
+
     @SerializedName("a")
     private String alias;
     @SerializedName("c")
@@ -32,6 +38,29 @@ public class Manga {
         this.status = status;
         this.title = title;
     }
+
+    protected Manga(Parcel in) {
+        alias = in.readString();
+        categories = in.createStringArrayList();
+        hits = in.readInt();
+        ID = in.readString();
+        image = in.readString();
+        lastChapterDate = in.readLong();
+        status = in.readInt();
+        title = in.readString();
+    }
+
+    public static final Creator<Manga> CREATOR = new Creator<Manga>() {
+        @Override
+        public Manga createFromParcel(Parcel in) {
+            return new Manga(in);
+        }
+
+        @Override
+        public Manga[] newArray(int size) {
+            return new Manga[size];
+        }
+    };
 
     public String getAlias() {
         return alias;
@@ -110,5 +139,33 @@ public class Manga {
                 ",\n status=" + status +
                 ",\n title='" + title + '\'' +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Manga otherManga) {
+        if (lastChapterDate>otherManga.lastChapterDate){
+            return -1;
+        } else if (otherManga.lastChapterDate>lastChapterDate){
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(alias);
+        dest.writeStringList(categories);
+        dest.writeInt(hits);
+        dest.writeString(ID);
+        dest.writeString(image);
+        dest.writeLong(lastChapterDate);
+        dest.writeInt(status);
+        dest.writeString(title);
     }
 }

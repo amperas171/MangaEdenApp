@@ -2,23 +2,24 @@ package com.amperas17.mangaedenapp.model.page;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class PageListResponse {
 
     @SerializedName("images")
-    private List<Page> pages;
+    private ArrayList<Page> pages;
 
-    public PageListResponse(List<Page> pages) {
+    public PageListResponse(ArrayList<Page> pages) {
         this.pages = pages;
     }
 
-    public List<Page> getPages() {
+    public ArrayList<Page> getPages() {
         return pages;
     }
 
-    public void setPages(List<Page> pages) {
+    public void setPages(ArrayList<Page> pages) {
         this.pages = pages;
     }
 

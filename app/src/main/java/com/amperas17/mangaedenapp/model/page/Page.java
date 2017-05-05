@@ -1,7 +1,9 @@
 package com.amperas17.mangaedenapp.model.page;
 
 
-public class Page {
+import java.io.Serializable;
+
+public class Page implements Serializable {
     private int number;
     private String url;
     private int weight;

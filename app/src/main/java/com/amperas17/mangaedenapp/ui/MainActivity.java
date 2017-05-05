@@ -10,10 +10,14 @@ import android.widget.TextView;
 import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApi;
+import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
 import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 import com.amperas17.mangaedenapp.model.page.Page;
 import com.amperas17.mangaedenapp.model.page.PageListResponse;
+
+import java.io.IOException;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*btnGetMangasSync = (Button) findViewById(R.id.btnGetMangasSync);
+        btnGetMangasSync = (Button) findViewById(R.id.btnGetMangasSync);
         btnGetMangasSync.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 });
                 thread.start();
             }
-        });*/
+        });
 
         btnGetMangaFullInfo.callOnClick();
 

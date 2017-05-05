@@ -11,6 +11,8 @@ import retrofit2.http.Query;
 
 public interface MangaApi {
 
+    int ENGLISH = 0;
+
     @GET("api/list/{lang}/")
     Call<MangaListResponse> getMangaList(@Path("lang") int lang);
 
