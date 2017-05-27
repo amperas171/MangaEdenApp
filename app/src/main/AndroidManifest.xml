@@ -13,12 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ui.MainActivity"/>
-
         <activity android:name=".ui.mangalist.MangaListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
@@ -27,7 +24,7 @@
 
         <activity android:name=".ui.chapterimages.ChapterImagesActivity"/>
 
-        <activity android:name=".ui.ZoomImageActivity"
+        <activity android:name=".ui.zoom.ZoomImageActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
     </application>

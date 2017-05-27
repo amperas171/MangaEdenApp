@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <com.github.chrisbanes.photoview.PhotoView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/photo_view"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.amperas17.mangaedenapp.ui.zoom.ZoomViewPager
+        android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/noimage"
-/>
+        android:background="@color/cardview_dark_background"/>
+
+</LinearLayout>

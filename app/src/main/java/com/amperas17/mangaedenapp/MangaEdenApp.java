@@ -5,8 +5,8 @@ import android.app.Application;
 import com.amperas17.mangaedenapp.api.MangaApi;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.chapter.ChapterDeserializer;
-import com.amperas17.mangaedenapp.model.page.Page;
-import com.amperas17.mangaedenapp.model.page.PageDeserializer;
+import com.amperas17.mangaedenapp.model.image.Image;
+import com.amperas17.mangaedenapp.model.image.ImageDeserializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -34,7 +34,7 @@ public class MangaEdenApp extends Application {
     private void configureRetrofit() {
         //Конвертор
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Page.class, new PageDeserializer())
+                .registerTypeAdapter(Image.class, new ImageDeserializer())
                 .registerTypeAdapter(Chapter.class, new ChapterDeserializer())
                 .create();
 

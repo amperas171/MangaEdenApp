@@ -3,8 +3,6 @@ package com.amperas17.mangaedenapp.ui.mangafull;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,11 +19,10 @@ import android.widget.Toast;
 
 import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.R;
+import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
-import com.amperas17.mangaedenapp.model.page.Page;
 import com.amperas17.mangaedenapp.ui.chapterimages.ChapterImagesActivity;
-import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -84,7 +79,6 @@ public class MangaFullActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(mangaTitle);
 
-
         chapterAdapter = new ChapterAdapter(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Chapter chapter) {
@@ -116,7 +110,7 @@ public class MangaFullActivity extends AppCompatActivity {
                 mangaFullInfo = response.body();
 
                 Picasso.with(MangaFullActivity.this)
-                        .load(getString(R.string.image_url_prefix) + mangaFullInfo.getImage())
+                        .load(MangaApiHelper.buildUrl(mangaFullInfo.getImage()))
                         .placeholder(R.drawable.loading)
                         .error(R.drawable.noimage)
                         .into(ivFullMangaImage);

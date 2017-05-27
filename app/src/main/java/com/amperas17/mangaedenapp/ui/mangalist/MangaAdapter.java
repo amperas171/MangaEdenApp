@@ -8,27 +8,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amperas17.mangaedenapp.R;
+import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.model.manga.Manga;
+import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
+import com.amperas17.mangaedenapp.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
 
     ArrayList<Manga> mangaList;
-    private OnItemClickListener listener;
+    private AdapterItemClickListener<Manga> listener;
 
-    MangaAdapter(OnItemClickListener listener) {
+    MangaAdapter(AdapterItemClickListener<Manga> listener) {
         this.mangaList = new ArrayList<>();
         this.listener = listener;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_manga, parent, false);
         return new ViewHolder(v);
@@ -43,6 +42,7 @@ class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
     public int getItemCount() {
         return mangaList.size();
     }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -59,18 +59,18 @@ class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
             tvMangaDate = (TextView) itemView.findViewById(R.id.tvMangaDate);
         }
 
-        private void bind(final Manga mangaItem, final OnItemClickListener listener) {
-            final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+        private void bind(final Manga mangaItem, final AdapterItemClickListener<Manga> listener) {
 
             Picasso.with(ivMangaImage.getContext())
-                    .load(itemView.getContext().getString(R.string.image_url_prefix) + (mangaItem.getImage()))
+                    .load(MangaApiHelper.buildUrl(mangaItem.getImage()))
                     .placeholder(R.drawable.loading)
                     .error(R.drawable.noimage)
                     .into(ivMangaImage);
 
             tvMangaTitle.setText(mangaItem.getTitle());
-            tvMangaHits.setText("" + mangaItem.getHits());
-            tvMangaDate.setText(DATE_FORMAT.format(new Date(1000 * mangaItem.getLastChapterDate())));
+            tvMangaHits.setText(String.valueOf(mangaItem.getHits()));
+            tvMangaDate.setText(DateUtils.defaultFormatFromSeconds(mangaItem.getLastChapterDate()));
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -79,10 +79,6 @@ class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
             });
         }
 
-    }
-
-    interface OnItemClickListener {
-        void onItemClick(Manga manga);
     }
 
 }

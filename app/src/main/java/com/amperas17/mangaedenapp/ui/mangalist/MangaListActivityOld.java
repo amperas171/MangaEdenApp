@@ -17,7 +17,6 @@ import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApi;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
-import com.amperas17.mangaedenapp.data.MangaListProviderOld;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 import com.amperas17.mangaedenapp.ui.mangafull.MangaFullActivity;
@@ -32,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MangaListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
+public class MangaListActivityOld extends AppCompatActivity implements SearchView.OnQueryTextListener,
         MangaListProvider.IGetMangaList{
 
     public static final String MANGA_LIST_TAG = "mangaList";
@@ -50,9 +49,11 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
     public static final int MANGA_LIST_ALL_NUMBER = 2000;
 
 
+    private MangaApi mangaApi;
+    private Call<MangaListResponse> mangaListRequestCall;
     private MangaListProvider mangaListProvider;
 
-    ArrayList<Manga> mangaList = new ArrayList<>();
+    ArrayList<Manga> mangaListAll = new ArrayList<>();
 
     private MangaAdapter mangaAdapter;
 
@@ -71,6 +72,7 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_list);
 
+        mangaApi = MangaEdenApp.getMangaApi();
         mangaListProvider = new MangaListProvider(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
@@ -91,9 +93,9 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
             @Override
             public void onItemClick(Manga manga) {
                 if (manga != null) {
-                    startActivity(MangaFullActivity.newIntent(MangaListActivity.this, manga.getID(), manga.getTitle()));
+                    startActivity(MangaFullActivity.newIntent(MangaListActivityOld.this, manga.getID(), manga.getTitle()));
                 } else {
-                    Toast.makeText(MangaListActivity.this, R.string.incorrect_manga_id, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MangaListActivityOld.this, R.string.incorrect_manga_id, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -110,8 +112,8 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
             addDataToAdapter(list);
 
             ArrayList<Manga> listAll = savedInstanceState.getParcelableArrayList(MANGA_LIST_ALL_TAG);
-            if (mangaList != null && listAll != null) {
-                mangaList.addAll(listAll);
+            if (mangaListAll != null && listAll != null) {
+                mangaListAll.addAll(listAll);
             }
 
             isSearching = savedInstanceState.getBoolean(IS_SEARCHING_TAG, false);
@@ -141,7 +143,7 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList(MANGA_LIST_TAG, mangaAdapter.mangaList);
-        outState.putParcelableArrayList(MANGA_LIST_ALL_TAG, mangaList);
+        outState.putParcelableArrayList(MANGA_LIST_ALL_TAG, mangaListAll);
         outState.putBoolean(IS_UPDATING_TAG, isUpdating);
         outState.putBoolean(IS_LOADING_TAG, isLoading);
         outState.putString(SEARCH_TAG, searchText);
@@ -151,12 +153,38 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
     @Override
     protected void onStop() {
         super.onStop();
-        mangaListProvider.cancelDataRequest();
+        if (mangaListRequestCall != null) {
+            mangaListRequestCall.cancel();
+        }
     }
 
     private void callDataRequest() {
-        tvNoData.setVisibility(View.GONE);
         mangaListProvider.callData();
+    }
+
+    private void callDataRequest1() {
+        tvNoData.setVisibility(View.GONE);
+        mangaListRequestCall = mangaApi.getMangaList(MangaApiHelper.ENGLISH, 0);
+        mangaListRequestCall.enqueue(new Callback<MangaListResponse>() {
+            @Override
+            public void onFailure(Call<MangaListResponse> call, Throwable t) {
+                stopRefresh();
+                if (!call.isCanceled()) {
+                    tvNoData.setText("Error occurred: " + t.getMessage() + ". Check internet connection and try again.");
+                    tvNoData.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onResponse(Call<MangaListResponse> call, Response<MangaListResponse> response) {
+                mangaListAll.clear();
+                //mangaListAll.addAll(response.body().getMangas().subList(ZERO,MANGA_LIST_ALL_NUMBER));
+                mangaListAll.addAll(response.body().getMangas());
+                Collections.sort(mangaListAll);
+                addDataToAdapter(mangaListAll.subList(ZERO, MANGA_LIST_NUMBER));
+                stopRefresh();
+            }
+        });
     }
 
     @Override
@@ -198,12 +226,12 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
     public boolean onQueryTextChange(String newText) {
         tvNoData.setVisibility(View.GONE);
         searchText = newText;
-        if (!mangaList.isEmpty()) {
+        if (!mangaListAll.isEmpty()) {
             if (newText.isEmpty()) {
-                addDataToAdapter(mangaList);
+                addDataToAdapter(mangaListAll.subList(ZERO, MANGA_LIST_NUMBER));
             } else {
                 List<Manga> resultList = new ArrayList<>();
-                for (Manga manga : mangaList) {
+                for (Manga manga : mangaListAll) {
                     if (manga.getTitle().toLowerCase().startsWith(newText.toLowerCase())
                             || manga.getTitle().toLowerCase().contains(" " + newText.toLowerCase())) {
                         resultList.add(manga);
@@ -229,30 +257,14 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
     @Override
     public void onBackPressed() {
         if (!searchView.isIconified()) {
-            addDataToAdapter(mangaList);
+            addDataToAdapter(mangaListAll.subList(ZERO, MANGA_LIST_NUMBER));
             searchView.onActionViewCollapsed();
             swipeRefreshLayout.setEnabled(true);
         } else if (swipeRefreshLayout.isRefreshing()) {
-            mangaListProvider.cancelDataRequest();
+            mangaListRequestCall.cancel();
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public void onGetDate(ArrayList<Manga> mangaList) {
-        this.mangaList = mangaList;
-        addDataToAdapter(mangaList);
-        stopRefresh();
-    }
-
-    @Override
-    public void onError(Throwable t) {
-        tvNoData.setText("Error occurred: " + t.getMessage() + ". Check internet connection and try again.");
-        tvNoData.setVisibility(View.VISIBLE);
-        mangaAdapter.mangaList.clear();
-        mangaAdapter.notifyDataSetChanged();
-        stopRefresh();
     }
 
     private void addDataToAdapter(List<Manga> mangas) {
@@ -266,5 +278,21 @@ public class MangaListActivity extends AppCompatActivity implements SearchView.O
         progressBar.setVisibility(View.GONE);
         isUpdating = false;
         isLoading = false;
+    }
+
+    @Override
+    public void onGetDate(ArrayList<Manga> mangaList) {
+        mangaListAll.clear();
+        //mangaListAll.addAll(response.body().getMangas().subList(ZERO,MANGA_LIST_ALL_NUMBER));
+        mangaListAll.addAll(mangaList);
+        Collections.sort(mangaListAll);
+        addDataToAdapter(mangaListAll.subList(ZERO, MANGA_LIST_NUMBER));
+        stopRefresh();
+    }
+
+    @Override
+    public void onError(Throwable t) {
+        tvNoData.setText("Error occurred: " + t.getMessage() + ". Check internet connection and try again.");
+        tvNoData.setVisibility(View.VISIBLE);
     }
 }

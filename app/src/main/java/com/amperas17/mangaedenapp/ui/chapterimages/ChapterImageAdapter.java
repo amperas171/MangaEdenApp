@@ -1,6 +1,7 @@
 package com.amperas17.mangaedenapp.ui.chapterimages;
 
 
+import android.content.res.Configuration;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,20 +9,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.amperas17.mangaedenapp.R;
-import com.amperas17.mangaedenapp.model.page.Page;
+import com.amperas17.mangaedenapp.api.MangaApiHelper;
+import com.amperas17.mangaedenapp.model.image.Image;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 
-class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
+public class ChapterImageAdapter extends RecyclerView.Adapter<ChapterImageAdapter.ViewHolder> {
 
-    ArrayList<Page> pageList;
+    ArrayList<Image> imageList;
     private OnItemClickListener listener;
 
-    GalleryAdapter(OnItemClickListener listener) {
-        this.pageList = new ArrayList<>();
+    ChapterImageAdapter(OnItemClickListener listener) {
+        this.imageList = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -35,37 +36,45 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(pageList.get(position), listener);
+        holder.bind(imageList.get(position), listener);
     }
 
     @Override
     public int getItemCount() {
-        return pageList.size();
+        return imageList.size();
     }
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        PhotoView ivPageImage;
+
+        ImageView ivPageImage;
 
         private ViewHolder(View view) {
             super(view);
-            ivPageImage = (PhotoView) view.findViewById(R.id.ivPageImage);
+            ivPageImage = (ImageView) view.findViewById(R.id.ivPageImage);
         }
 
-        private void bind(final Page pageItem, final OnItemClickListener listener) {
+        private void bind(final Image pageItem, final OnItemClickListener listener) {
+
+            float preload = 0.25f;
+            if (itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                preload = 1;
+            }
+
 
             Glide.with(itemView.getContext())
-                    .load(itemView.getContext().getString(R.string.image_url_prefix) + pageItem.getUrl())
-                    .thumbnail(0.25f)
+                    .load(MangaApiHelper.buildUrl(pageItem.getUrl()))
+                    .thumbnail(preload)
                     .crossFade()
                     .error(R.drawable.noimage)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivPageImage);
 
+
             ivPageImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onItemClick(pageItem);
+                    listener.onItemClick(pageItem, getAdapterPosition());
                 }
             });
         }
@@ -73,6 +82,6 @@ class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
 
 
     interface OnItemClickListener {
-        void onItemClick(Page page);
+        void onItemClick(Image page, int position);
     }
 }

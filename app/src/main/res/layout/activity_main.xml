@@ -28,7 +28,7 @@
         android:id="@+id/btnGetPages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get pages"/>
+        android:text="Get images"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
         android:id="@+id/btnGetPagesSync"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Get pages"/>
+        android:text="Get images"/>
 
     <TextView
         android:id="@+id/tvMangasNumber"

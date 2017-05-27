@@ -1,7 +1,7 @@
 package com.amperas17.mangaedenapp.api;
 
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
-import com.amperas17.mangaedenapp.model.page.PageListResponse;
+import com.amperas17.mangaedenapp.model.image.ImageListResponse;
 import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 
 import retrofit2.Call;
@@ -10,8 +10,6 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MangaApi {
-
-    int ENGLISH = 0;
 
     @GET("api/list/{lang}/")
     Call<MangaListResponse> getMangaList(@Path("lang") int lang);
@@ -28,5 +26,5 @@ public interface MangaApi {
 
 
     @GET("api/chapter/{chapterId}/")
-    Call<PageListResponse> getPageList(@Path("chapterId") String chapterId);
+    Call<ImageListResponse> getPageList(@Path("chapterId") String chapterId);
 }
