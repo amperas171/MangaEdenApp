@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.ui.chapterimages;
+package com.amperas17.mangaedenapp.ui.gallery;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +20,8 @@ import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.model.image.Image;
 import com.amperas17.mangaedenapp.model.image.ImageListResponse;
-import com.amperas17.mangaedenapp.ui.zoom.ZoomImageActivity;
-import com.amperas17.mangaedenapp.ui.zoom.ZoomDialogFragment;
+import com.amperas17.mangaedenapp.ui.zoominggallery.ZoomImageActivity;
+import com.amperas17.mangaedenapp.ui.zoominggallery.ZoomDialogFragment;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.squareup.picasso.Picasso;
 

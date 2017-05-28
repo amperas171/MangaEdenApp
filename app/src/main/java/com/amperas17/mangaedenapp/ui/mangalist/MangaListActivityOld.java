@@ -17,6 +17,7 @@ import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApi;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
+import com.amperas17.mangaedenapp.data.MangaListProvider;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 import com.amperas17.mangaedenapp.ui.mangafull.MangaFullActivity;

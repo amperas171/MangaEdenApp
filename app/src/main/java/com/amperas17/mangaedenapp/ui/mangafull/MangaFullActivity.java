@@ -22,7 +22,7 @@ import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
-import com.amperas17.mangaedenapp.ui.chapterimages.ChapterImagesActivity;
+import com.amperas17.mangaedenapp.ui.gallery.ChapterImagesActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;

@@ -13,13 +13,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.R;
-import com.amperas17.mangaedenapp.api.MangaApi;
-import com.amperas17.mangaedenapp.api.MangaApiHelper;
-import com.amperas17.mangaedenapp.data.MangaListProviderOld;
+import com.amperas17.mangaedenapp.data.MangaListProvider;
 import com.amperas17.mangaedenapp.model.manga.Manga;
-import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 import com.amperas17.mangaedenapp.ui.mangafull.MangaFullActivity;
 import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
 
@@ -27,10 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MangaListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         MangaListProvider.IGetMangaList{

@@ -1,25 +1,32 @@
-package com.amperas17.mangaedenapp.ui.mangalist;
+package com.amperas17.mangaedenapp.data;
 
 
 import android.content.Context;
 
-import com.amperas17.mangaedenapp.data.BaseResponseProvider;
-import com.amperas17.mangaedenapp.data.MangaListResponseProvider;
+import com.amperas17.mangaedenapp.api.responseprovider.BaseResponseProvider;
+import com.amperas17.mangaedenapp.api.responseprovider.MangaListResponseProvider;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 public class MangaListProvider implements BaseResponseProvider.IGetData<MangaListResponse> {
 
-    Context context;
-    MangaListResponseProvider responseProvider;
+    private Context context;
+    private MangaListResponseProvider responseProvider;
 
     public MangaListProvider(Context context){
         this.context = context;
         responseProvider = new MangaListResponseProvider(this);
+    }
+
+    public void callData(){
+        responseProvider.makeCall();
+    }
+
+    public void cancelDataRequest(){
+        responseProvider.stopRequest();
     }
 
     @Override
@@ -34,13 +41,6 @@ public class MangaListProvider implements BaseResponseProvider.IGetData<MangaLis
         ((IGetMangaList)context).onError(t);
     }
 
-    public void callData(){
-        responseProvider.makeCall();
-    }
-
-    public void cancelDataRequest(){
-        responseProvider.stopRequest();
-    }
 
     public interface IGetMangaList{
         void onGetDate(ArrayList<Manga> mangaList);

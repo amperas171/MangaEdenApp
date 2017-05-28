@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.data;
+package com.amperas17.mangaedenapp.api.responseprovider;
 
 import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;

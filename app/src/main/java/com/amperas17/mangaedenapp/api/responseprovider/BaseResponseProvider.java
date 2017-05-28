@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.data;
+package com.amperas17.mangaedenapp.api.responseprovider;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,7 +28,6 @@ public abstract class BaseResponseProvider<T> {
                 caller.onGetDate(response.body());
             }
         });
-
     }
 
     public void stopRequest() {

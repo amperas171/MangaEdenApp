@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.ui.chapterimages;
+package com.amperas17.mangaedenapp.ui.gallery;
 
 
 import android.annotation.TargetApi;

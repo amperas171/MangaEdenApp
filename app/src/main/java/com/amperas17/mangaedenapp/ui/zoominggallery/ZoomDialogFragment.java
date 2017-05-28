@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.ui.zoom;
+package com.amperas17.mangaedenapp.ui.zoominggallery;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
