@@ -7,3 +7,7 @@
 /captures
 .externalNativeBuild
 app/libs/
+/gradlew.bat
+/gradle/
+/gradle.properties
+/gradlew
