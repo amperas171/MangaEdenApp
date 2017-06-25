@@ -31,14 +31,14 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChapterImagesActivity extends AppCompatActivity {
+public class ChapterActivity extends AppCompatActivity {
 
     public static final String CHAPTER_ID_TAG = "ChapterID";
     public static final String CHAPTER_TITLE_TAG = "ChapterTitle";
     public static final int ZOOM_ACTIVITY_REQUEST_CODE = 101;
     public static final String POSITION_TAG = "position";
 
-    private ChapterImageAdapter galleryAdapter;
+    private ChapterAdapter galleryAdapter;
     private RecyclerView recyclerView;
 
     private ArrayList<Image> pageList = new ArrayList<>();
@@ -46,7 +46,7 @@ public class ChapterImagesActivity extends AppCompatActivity {
     private String chapterTitle;
 
     public static Intent newIntent(Context context, String chapterID, String chapterTitle) {
-        Intent intent = new Intent(context, ChapterImagesActivity.class);
+        Intent intent = new Intent(context, ChapterActivity.class);
         intent.putExtra(CHAPTER_ID_TAG, chapterID);
         intent.putExtra(CHAPTER_TITLE_TAG, chapterTitle);
         return intent;
@@ -69,16 +69,16 @@ public class ChapterImagesActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        galleryAdapter = new ChapterImageAdapter(new ChapterImageAdapter.OnItemClickListener() {
+        galleryAdapter = new ChapterAdapter(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Image page, int position) {
                 startActivityForResult(
-                        ZoomImageActivity.newIntent(ChapterImagesActivity.this,pageList, position),
+                        ZoomImageActivity.newIntent(ChapterActivity.this,pageList, position),
                         ZOOM_ACTIVITY_REQUEST_CODE
                 );
                 //showDialog(page);
                 //showZoomDialog(imageList, position);
-                //Toast.makeText(ChapterImagesActivity.this,page.toString(),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ChapterActivity.this,page.toString(),Toast.LENGTH_SHORT).show();
             }
         });
 

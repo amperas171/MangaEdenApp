@@ -20,7 +20,7 @@ public class MangaEdenApp extends Application {
     private static MangaApi mangaApi;
     private Retrofit retrofit;
 
-    public static MangaApi getMangaApi(){
+    public static MangaApi getMangaApi() {
         return mangaApi;
     }
 
@@ -32,23 +32,23 @@ public class MangaEdenApp extends Application {
     }
 
     private void configureRetrofit() {
-        //Конвертор
+        //Converter
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Image.class, new ImageDeserializer())
                 .registerTypeAdapter(Chapter.class, new ChapterDeserializer())
                 .create();
 
-        //Логирование
+        //Logging
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(logging).build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.mangaeden.com/") //Базовая часть адреса
+                .baseUrl("https://www.mangaeden.com/") //Base address part
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson)) //Конвертер, необходимый для преобразования JSON'а в объекты
+                .addConverterFactory(GsonConverterFactory.create(gson)) //transform json into objects
                 .build();
 
-        mangaApi = retrofit.create(MangaApi.class); //Создаем объект, при помощи которого будем выполнять запросы
+        mangaApi = retrofit.create(MangaApi.class); //api object that makes responses
     }
 }

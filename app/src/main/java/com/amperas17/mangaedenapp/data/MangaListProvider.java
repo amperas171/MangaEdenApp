@@ -16,34 +16,35 @@ public class MangaListProvider implements BaseResponseProvider.IGetData<MangaLis
     private Context context;
     private MangaListResponseProvider responseProvider;
 
-    public MangaListProvider(Context context){
+    public MangaListProvider(Context context) {
         this.context = context;
         responseProvider = new MangaListResponseProvider(this);
     }
 
-    public void callData(){
+    public void callData() {
         responseProvider.makeCall();
     }
 
-    public void cancelDataRequest(){
+    public void cancelDataRequest() {
         responseProvider.stopRequest();
     }
 
     @Override
-    public void onGetDate(MangaListResponse response) {
+    public void onGetData(MangaListResponse response) {
         ArrayList<Manga> list = response.getMangas();
         Collections.sort(list);
-        ((IGetMangaList)context).onGetDate(list);
+        ((IGetMangaList) context).onGetData(list);
     }
 
     @Override
     public void onError(Throwable t) {
-        ((IGetMangaList)context).onError(t);
+        ((IGetMangaList) context).onError(t);
     }
 
 
-    public interface IGetMangaList{
-        void onGetDate(ArrayList<Manga> mangaList);
+    public interface IGetMangaList {
+        void onGetData(ArrayList<Manga> mangaList);
+
         void onError(Throwable t);
     }
 }

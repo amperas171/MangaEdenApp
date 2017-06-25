@@ -4,7 +4,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public abstract class BaseResponseProvider<T> {
+public abstract class BaseResponseProvider<T, U> {
 
     private IGetData<T> caller;
     private Call<T> call;
@@ -13,10 +13,10 @@ public abstract class BaseResponseProvider<T> {
         this.caller = caller;
     }
 
-    public abstract Call<T> initCall();
+    public abstract Call<T> initCall(U... args);
 
-    public void makeCall() {
-        call = initCall();
+    public void makeCall(U... args) {
+        call = initCall(args);
         call.enqueue(new Callback<T>() {
             @Override
             public void onFailure(Call<T> call, Throwable t) {
@@ -25,18 +25,18 @@ public abstract class BaseResponseProvider<T> {
 
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                caller.onGetDate(response.body());
+                caller.onGetData(response.body());
             }
         });
     }
 
     public void stopRequest() {
-        if (call.isExecuted())
+        if (call != null && call.isExecuted())
             call.cancel();
     }
 
     public interface IGetData<T> {
-        void onGetDate(T response);
+        void onGetData(T response);
 
         void onError(Throwable t);
     }

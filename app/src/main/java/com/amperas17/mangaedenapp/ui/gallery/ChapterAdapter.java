@@ -16,12 +16,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
-public class ChapterImageAdapter extends RecyclerView.Adapter<ChapterImageAdapter.ViewHolder> {
+public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
 
     ArrayList<Image> imageList;
     private OnItemClickListener listener;
 
-    ChapterImageAdapter(OnItemClickListener listener) {
+    ChapterAdapter(OnItemClickListener listener) {
         this.imageList = new ArrayList<>();
         this.listener = listener;
     }

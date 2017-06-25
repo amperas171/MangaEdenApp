@@ -22,7 +22,7 @@
 
         <activity android:name=".ui.mangafull.MangaFullActivity"/>
 
-        <activity android:name=".ui.gallery.ChapterImagesActivity"/>
+        <activity android:name=".ui.gallery.ChapterActivity"/>
 
         <activity android:name=".ui.zoominggallery.ZoomImageActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>

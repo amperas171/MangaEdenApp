@@ -17,12 +17,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
+import com.amperas17.mangaedenapp.data.MangaFullProvider;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
-import com.amperas17.mangaedenapp.ui.gallery.ChapterImagesActivity;
+import com.amperas17.mangaedenapp.ui.gallery.ChapterActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -30,32 +30,30 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class MangaFullActivity extends AppCompatActivity {
+public class MangaFullActivity extends AppCompatActivity implements MangaFullProvider.IGetMangaFull {
 
     public static final String MANGA_ID_TAG = "MangaID";
     public static final String MANGA_TITLE_TAG = "MangaTitle";
+
+    private MangaFullProvider mangaFullProvider;
 
     private ChapterAdapter chapterAdapter;
     private RecyclerView recyclerView;
 
     private NestedScrollView mangaFullContainer;
-    private TextView tvReleased,tvHits,tvAuthor,tvCategories,tvDescription;
+    private TextView tvReleased, tvHits, tvAuthor, tvCategories, tvDescription;
     private ImageView ivFullMangaImage;
     private ProgressBar progressBar;
 
     private String mangaID;
     private String mangaTitle;
 
-    private MangaFullInfo mangaFullInfo;
 
-    public static Intent newIntent(Context context, String mangaID, String mangaTitle){
-        Intent intent = new Intent(context,MangaFullActivity.class);
-        intent.putExtra(MANGA_ID_TAG,mangaID);
-        intent.putExtra(MANGA_TITLE_TAG,mangaTitle);
+    public static Intent newIntent(Context context, String mangaID, String mangaTitle) {
+        Intent intent = new Intent(context, MangaFullActivity.class);
+        intent.putExtra(MANGA_ID_TAG, mangaID);
+        intent.putExtra(MANGA_TITLE_TAG, mangaTitle);
         return intent;
     }
 
@@ -64,7 +62,9 @@ public class MangaFullActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_full);
 
-        mangaFullContainer = (NestedScrollView)findViewById(R.id.mangaFullContainer);
+        mangaFullProvider = new MangaFullProvider(this);
+
+        mangaFullContainer = (NestedScrollView) findViewById(R.id.mangaFullContainer);
         tvReleased = (TextView) findViewById(R.id.tvReleased);
         tvHits = (TextView) findViewById(R.id.tvHits);
         tvAuthor = (TextView) findViewById(R.id.tvAuthor);
@@ -82,10 +82,10 @@ public class MangaFullActivity extends AppCompatActivity {
         chapterAdapter = new ChapterAdapter(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Chapter chapter) {
-                if (chapter!=null) {
-                    startActivity(ChapterImagesActivity.newIntent(MangaFullActivity.this, chapter.getID(), chapter.getTitle()));
+                if (chapter != null) {
+                    startActivity(ChapterActivity.newIntent(MangaFullActivity.this, chapter.getID(), chapter.getTitle()));
                 } else {
-                    Toast.makeText(MangaFullActivity.this, R.string.incorrect_chapter_id,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MangaFullActivity.this, R.string.incorrect_chapter_id, Toast.LENGTH_SHORT).show();
                     onBackPressed();
                 }
             }
@@ -94,47 +94,15 @@ public class MangaFullActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewChapterList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(chapterAdapter);
-        ViewCompat.setNestedScrollingEnabled(recyclerView,false);
+        ViewCompat.setNestedScrollingEnabled(recyclerView, false);
 
         callDataRequest();
     }
 
-    private void callDataRequest(){
+    private void callDataRequest() {
         progressBar.setVisibility(View.VISIBLE);
         mangaFullContainer.setVisibility(View.GONE);
-        MangaEdenApp.getMangaApi().getMangaFullInfo(mangaID).enqueue(new Callback<MangaFullInfo>() {
-            @Override
-            public void onResponse(Call<MangaFullInfo> call, Response<MangaFullInfo> response) {
-                final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-
-                mangaFullInfo = response.body();
-
-                Picasso.with(MangaFullActivity.this)
-                        .load(MangaApiHelper.buildUrl(mangaFullInfo.getImage()))
-                        .placeholder(R.drawable.loading)
-                        .error(R.drawable.noimage)
-                        .into(ivFullMangaImage);
-
-                tvAuthor.setText(mangaFullInfo.getAuthor());
-                tvHits.setText("" + mangaFullInfo.getHits());
-                tvReleased.setText(DATE_FORMAT.format(new Date(1000 * mangaFullInfo.getLast_chapter_date())));
-                tvDescription.setText(Html.fromHtml(mangaFullInfo.getDescription()));
-                tvCategories.setText(mangaFullInfo.getCategoriesAsString());
-
-                addDataToAdapter(mangaFullInfo.getChapters());
-
-                progressBar.setVisibility(View.GONE);
-                mangaFullContainer.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onFailure(Call<MangaFullInfo> call, Throwable t) {
-                Log.d("mmanga", "onFailure: " + t.getMessage());
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(MangaFullActivity.this, t.getMessage(),Toast.LENGTH_SHORT).show();
-                onBackPressed();
-            }
-        });
+        mangaFullProvider.callData(mangaID);
     }
 
     @Override
@@ -146,10 +114,56 @@ public class MangaFullActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onGetData(MangaFullInfo mangaFullInfo) {
+        initView(mangaFullInfo);
+    }
+
+    @Override
+    public void onError(Throwable t) {
+        Log.d("mmanga", "onFailure: " + t.getMessage());
+        progressBar.setVisibility(View.GONE);
+        Toast.makeText(MangaFullActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+        onBackPressed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mangaFullProvider.cancelDataRequest();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (progressBar.getVisibility() == View.VISIBLE)
+            mangaFullProvider.cancelDataRequest();
+        super.onBackPressed();
+    }
+
+    private void initView(MangaFullInfo mangaFullInfo) {
+        final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+
+        Picasso.with(MangaFullActivity.this)
+                .load(MangaApiHelper.buildUrl(mangaFullInfo.getImage()))
+                .placeholder(R.drawable.loading)
+                .error(R.drawable.noimage)
+                .into(ivFullMangaImage);
+
+        tvAuthor.setText(mangaFullInfo.getAuthor());
+        tvHits.setText("" + mangaFullInfo.getHits());
+        tvReleased.setText(DATE_FORMAT.format(new Date(1000 * mangaFullInfo.getLast_chapter_date())));
+        tvDescription.setText(Html.fromHtml(mangaFullInfo.getDescription()));
+        tvCategories.setText(mangaFullInfo.getCategoriesAsString());
+
+        addDataToAdapter(mangaFullInfo.getChapters());
+
+        progressBar.setVisibility(View.GONE);
+        mangaFullContainer.setVisibility(View.VISIBLE);
+    }
+
     private void addDataToAdapter(ArrayList<Chapter> chapters) {
         chapterAdapter.chapterList.clear();
         chapterAdapter.chapterList.addAll(chapters);
         chapterAdapter.notifyDataSetChanged();
     }
-
 }

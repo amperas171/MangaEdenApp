@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.Locale;
 
 
-class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder>{
+class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 
     ArrayList<Chapter> chapterList;
@@ -58,7 +58,7 @@ class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder>{
         }
 
         private void bind(final Chapter chapterItem, final OnItemClickListener listener) {
-            tvMangaTitle.setText(""+chapterItem.getNumber());
+            tvMangaTitle.setText("" + chapterItem.getNumber());
             tvChapterTitle.setText(chapterItem.getTitle());
             tvDate.setText(DATE_FORMAT.format(new Date(1000 * chapterItem.getDate())));
 
