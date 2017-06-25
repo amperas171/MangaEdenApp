@@ -8,15 +8,13 @@ import android.widget.TextView;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
+import com.amperas17.mangaedenapp.utils.DateUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 
 class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 
     ArrayList<Chapter> chapterList;
     private OnItemClickListener listener;
@@ -58,9 +56,9 @@ class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
         }
 
         private void bind(final Chapter chapterItem, final OnItemClickListener listener) {
-            tvMangaTitle.setText("" + chapterItem.getNumber());
+            tvMangaTitle.setText(String.valueOf(chapterItem.getNumber()));
             tvChapterTitle.setText(chapterItem.getTitle());
-            tvDate.setText(DATE_FORMAT.format(new Date(1000 * chapterItem.getDate())));
+            tvDate.setText(DateUtils.DATE_FORMAT.format(new Date(DateUtils.MILLIS_IN_SECOND * chapterItem.getDate())));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

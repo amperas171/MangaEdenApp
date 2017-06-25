@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
-import com.amperas17.mangaedenapp.model.image.Image;
+import com.amperas17.mangaedenapp.model.page.Page;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -18,9 +18,9 @@ import java.util.ArrayList;
 
 public class ZoomPagerAdapter extends PagerAdapter {
 
-    ArrayList<Image> pageList;
+    ArrayList<Page> pageList;
 
-    public ZoomPagerAdapter(ArrayList<Image> pageList) {
+    public ZoomPagerAdapter(ArrayList<Page> pageList) {
         this.pageList = pageList;
     }
 
@@ -41,8 +41,9 @@ public class ZoomPagerAdapter extends PagerAdapter {
 
         PhotoView photoView = (PhotoView) itemView.findViewById(R.id.photo_view);
 
+        //For very long images
         int weight = Target.SIZE_ORIGINAL;
-        if (pageList.get(position).getHeight()>2000) weight = 430;
+        if (pageList.get(position).getHeight() > 2000) weight = 430;
 
         Glide.with(container.getContext())
                 .load(MangaApiHelper.buildUrl(pageList.get(position).getUrl()))

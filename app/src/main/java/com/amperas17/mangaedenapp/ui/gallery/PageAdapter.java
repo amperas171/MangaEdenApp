@@ -10,19 +10,19 @@ import android.widget.ImageView;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
-import com.amperas17.mangaedenapp.model.image.Image;
+import com.amperas17.mangaedenapp.model.page.Page;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
-public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
+class PageAdapter extends RecyclerView.Adapter<PageAdapter.ViewHolder> {
 
-    ArrayList<Image> imageList;
+    ArrayList<Page> pageList;
     private OnItemClickListener listener;
 
-    ChapterAdapter(OnItemClickListener listener) {
-        this.imageList = new ArrayList<>();
+    PageAdapter(OnItemClickListener listener) {
+        this.pageList = new ArrayList<>();
         this.listener = listener;
     }
 
@@ -36,12 +36,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bind(imageList.get(position), listener);
+        holder.bind(pageList.get(position), listener);
     }
 
     @Override
     public int getItemCount() {
-        return imageList.size();
+        return pageList.size();
     }
 
 
@@ -54,13 +54,12 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
             ivPageImage = (ImageView) view.findViewById(R.id.ivPageImage);
         }
 
-        private void bind(final Image pageItem, final OnItemClickListener listener) {
+        private void bind(final Page pageItem, final OnItemClickListener listener) {
 
             float preload = 0.25f;
             if (itemView.getContext().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 preload = 1;
             }
-
 
             Glide.with(itemView.getContext())
                     .load(MangaApiHelper.buildUrl(pageItem.getUrl()))
@@ -69,7 +68,6 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
                     .error(R.drawable.noimage)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivPageImage);
-
 
             ivPageImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -82,6 +80,6 @@ public class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHold
 
 
     interface OnItemClickListener {
-        void onItemClick(Image page, int position);
+        void onItemClick(Page page, int position);
     }
 }

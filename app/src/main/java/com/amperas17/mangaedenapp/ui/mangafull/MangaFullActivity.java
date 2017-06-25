@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,13 +21,12 @@ import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.data.MangaFullProvider;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
-import com.amperas17.mangaedenapp.ui.gallery.ChapterActivity;
+import com.amperas17.mangaedenapp.ui.gallery.ChapterPagesActivity;
+import com.amperas17.mangaedenapp.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Locale;
 
 
 public class MangaFullActivity extends AppCompatActivity implements MangaFullProvider.IGetMangaFull {
@@ -76,14 +74,16 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
         mangaID = getIntent().getExtras().getString(MANGA_ID_TAG);
         mangaTitle = getIntent().getExtras().getString(MANGA_TITLE_TAG);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(mangaTitle);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle(mangaTitle);
+        }
 
         chapterAdapter = new ChapterAdapter(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Chapter chapter) {
                 if (chapter != null) {
-                    startActivity(ChapterActivity.newIntent(MangaFullActivity.this, chapter.getID(), chapter.getTitle()));
+                    startActivity(ChapterPagesActivity.newIntent(MangaFullActivity.this, chapter.getID(), chapter.getTitle()));
                 } else {
                     Toast.makeText(MangaFullActivity.this, R.string.incorrect_chapter_id, Toast.LENGTH_SHORT).show();
                     onBackPressed();
@@ -121,7 +121,6 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
 
     @Override
     public void onError(Throwable t) {
-        Log.d("mmanga", "onFailure: " + t.getMessage());
         progressBar.setVisibility(View.GONE);
         Toast.makeText(MangaFullActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
         onBackPressed();
@@ -130,7 +129,8 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
     @Override
     protected void onPause() {
         super.onPause();
-        mangaFullProvider.cancelDataRequest();
+        if (progressBar.getVisibility() == View.VISIBLE)
+            mangaFullProvider.cancelDataRequest();
     }
 
     @Override
@@ -141,7 +141,6 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
     }
 
     private void initView(MangaFullInfo mangaFullInfo) {
-        final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
 
         Picasso.with(MangaFullActivity.this)
                 .load(MangaApiHelper.buildUrl(mangaFullInfo.getImage()))
@@ -150,8 +149,8 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
                 .into(ivFullMangaImage);
 
         tvAuthor.setText(mangaFullInfo.getAuthor());
-        tvHits.setText("" + mangaFullInfo.getHits());
-        tvReleased.setText(DATE_FORMAT.format(new Date(1000 * mangaFullInfo.getLast_chapter_date())));
+        tvHits.setText(String.valueOf(mangaFullInfo.getHits()));
+        tvReleased.setText(DateUtils.DATE_FORMAT.format(new Date(DateUtils.MILLIS_IN_SECOND * mangaFullInfo.getLast_chapter_date())));
         tvDescription.setText(Html.fromHtml(mangaFullInfo.getDescription()));
         tvCategories.setText(mangaFullInfo.getCategoriesAsString());
 

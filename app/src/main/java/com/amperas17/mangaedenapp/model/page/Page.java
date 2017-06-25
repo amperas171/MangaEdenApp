@@ -1,39 +1,39 @@
-package com.amperas17.mangaedenapp.model.image;
+package com.amperas17.mangaedenapp.model.page;
 
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
 
-public class Image implements Parcelable {
+public class Page implements Parcelable {
     private int number;
     private String url;
     private int weight;
     private int height;
 
-    public Image(int number, String url, int weight, int height) {
+    public Page(int number, String url, int weight, int height) {
         this.number = number;
         this.url = url;
         this.weight = weight;
         this.height = height;
     }
 
-    protected Image(Parcel in) {
+    protected Page(Parcel in) {
         number = in.readInt();
         url = in.readString();
         weight = in.readInt();
         height = in.readInt();
     }
 
-    public static final Creator<Image> CREATOR = new Creator<Image>() {
+    public static final Creator<Page> CREATOR = new Creator<Page>() {
         @Override
-        public Image createFromParcel(Parcel in) {
-            return new Image(in);
+        public Page createFromParcel(Parcel in) {
+            return new Page(in);
         }
 
         @Override
-        public Image[] newArray(int size) {
-            return new Image[size];
+        public Page[] newArray(int size) {
+            return new Page[size];
         }
     };
 
@@ -71,7 +71,7 @@ public class Image implements Parcelable {
 
     @Override
     public String toString() {
-        return "Image{" +
+        return "Page{" +
                 "number=" + number +
                 ", url='" + url + '\'' +
                 ", weight=" + weight +

@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateUtils {
-    static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
-    static final int MILLIS_IN_SECOND = 1000;
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd.MM.yyyy", Locale.US);
+    public static final int MILLIS_IN_SECOND = 1000;
 
     public static String defaultFormat(Date date){
         return DATE_FORMAT.format(date);

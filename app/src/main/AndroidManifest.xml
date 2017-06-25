@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.amperas17.mangaedenapp"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.amperas17.mangaedenapp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -15,17 +15,16 @@
 
         <activity android:name=".ui.mangalist.MangaListActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
 
         <activity android:name=".ui.mangafull.MangaFullActivity"/>
 
-        <activity android:name=".ui.gallery.ChapterActivity"/>
+        <activity android:name=".ui.gallery.ChapterPagesActivity"/>
 
-        <activity android:name=".ui.zoominggallery.ZoomImageActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity android:name=".ui.zoominggallery.ZoomImageActivity"/>
 
     </application>
 
