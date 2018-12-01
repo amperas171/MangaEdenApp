@@ -60,7 +60,7 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
 
         mangaListProvider = new MangaListProvider(this);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -70,7 +70,7 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
             }
         });
 
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
 
         mangaAdapter = new MangaAdapter(new AdapterItemClickListener<Manga>() {
             @Override
@@ -83,11 +83,11 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
             }
         });
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerViewMangaList);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewMangaList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mangaAdapter);
 
-        tvNoData = (TextView) findViewById(R.id.tvNoData);
+        tvNoData = findViewById(R.id.tvNoData);
         tvNoData.setVisibility(View.GONE);
 
         if (savedInstanceState != null) {

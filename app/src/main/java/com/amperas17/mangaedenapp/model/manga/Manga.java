@@ -143,9 +143,9 @@ public class Manga implements Parcelable, Comparable<Manga> {
 
     @Override
     public int compareTo(Manga otherManga) {
-        if (lastChapterDate>otherManga.lastChapterDate){
+        if (lastChapterDate > otherManga.lastChapterDate) {
             return -1;
-        } else if (otherManga.lastChapterDate>lastChapterDate){
+        } else if (otherManga.lastChapterDate > lastChapterDate) {
             return 1;
         } else {
             return 0;

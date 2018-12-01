@@ -39,7 +39,7 @@ public class ZoomPagerAdapter extends PagerAdapter {
         LayoutInflater layoutInflater = (LayoutInflater) container.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View itemView = layoutInflater.inflate(R.layout.item_pager_zoom, container, false);
 
-        PhotoView photoView = (PhotoView) itemView.findViewById(R.id.photo_view);
+        PhotoView photoView = itemView.findViewById(R.id.photo_view);
 
         //For very long images
         int weight = Target.SIZE_ORIGINAL;

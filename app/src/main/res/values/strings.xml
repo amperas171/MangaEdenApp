@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MangaEdenApp</string>
+    <string name="app_name">MangaDragon</string>
     <string name="incorrect_manga_id">Incorrect manga ID</string>
     <string name="incorrect_chapter_id">Incorrect chapter ID</string>
 </resources>

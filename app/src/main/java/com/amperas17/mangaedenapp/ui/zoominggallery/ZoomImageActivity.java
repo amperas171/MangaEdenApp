@@ -54,7 +54,7 @@ public class ZoomImageActivity extends AppCompatActivity {
         pageList = getIntent().getExtras().getParcelableArrayList(IMAGES_TAG);
         int position = getIntent().getExtras().getInt(POSITION_TAG);
 
-        pager = (ZoomViewPager) findViewById(R.id.pager);
+        pager = findViewById(R.id.pager);
         ZoomPagerAdapter adapter = new ZoomPagerAdapter(pageList);
         pager.setAdapter(adapter);
         pager.setCurrentItem(position);

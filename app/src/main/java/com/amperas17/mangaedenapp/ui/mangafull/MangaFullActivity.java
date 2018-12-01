@@ -62,14 +62,14 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
 
         mangaFullProvider = new MangaFullProvider(this);
 
-        mangaFullContainer = (NestedScrollView) findViewById(R.id.mangaFullContainer);
-        tvReleased = (TextView) findViewById(R.id.tvReleased);
-        tvHits = (TextView) findViewById(R.id.tvHits);
-        tvAuthor = (TextView) findViewById(R.id.tvAuthor);
-        tvCategories = (TextView) findViewById(R.id.tvCategories);
-        tvDescription = (TextView) findViewById(R.id.tvDescription);
-        ivFullMangaImage = (ImageView) findViewById(R.id.ivFullMangaImage);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mangaFullContainer = findViewById(R.id.mangaFullContainer);
+        tvReleased = findViewById(R.id.tvReleased);
+        tvHits = findViewById(R.id.tvHits);
+        tvAuthor = findViewById(R.id.tvAuthor);
+        tvCategories = findViewById(R.id.tvCategories);
+        tvDescription = findViewById(R.id.tvDescription);
+        ivFullMangaImage = findViewById(R.id.ivFullMangaImage);
+        progressBar = findViewById(R.id.progressBar);
 
         mangaID = getIntent().getExtras().getString(MANGA_ID_TAG);
         mangaTitle = getIntent().getExtras().getString(MANGA_TITLE_TAG);
@@ -91,7 +91,7 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewChapterList);
+        recyclerView = findViewById(R.id.recyclerViewChapterList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(chapterAdapter);
         ViewCompat.setNestedScrollingEnabled(recyclerView, false);

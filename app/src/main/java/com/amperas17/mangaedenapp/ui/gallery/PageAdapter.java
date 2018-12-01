@@ -51,7 +51,7 @@ class PageAdapter extends RecyclerView.Adapter<PageAdapter.ViewHolder> {
 
         private ViewHolder(View view) {
             super(view);
-            ivPageImage = (ImageView) view.findViewById(R.id.ivPageImage);
+            ivPageImage = view.findViewById(R.id.ivPageImage);
         }
 
         private void bind(final Page pageItem, final OnItemClickListener listener) {

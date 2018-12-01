@@ -11,3 +11,5 @@ app/libs/
 /gradle/
 /gradle.properties
 /gradlew
+app/app-release.apk
+projectFilesBackup/

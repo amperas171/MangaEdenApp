@@ -53,10 +53,10 @@ class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
 
         private ViewHolder(final View itemView) {
             super(itemView);
-            ivMangaImage = (ImageView) itemView.findViewById(R.id.ivMangaImage);
-            tvMangaTitle = (TextView) itemView.findViewById(R.id.tvMangaTitle);
-            tvMangaHits = (TextView) itemView.findViewById(R.id.tvMangaHits);
-            tvMangaDate = (TextView) itemView.findViewById(R.id.tvMangaDate);
+            ivMangaImage = itemView.findViewById(R.id.ivMangaImage);
+            tvMangaTitle = itemView.findViewById(R.id.tvMangaTitle);
+            tvMangaHits = itemView.findViewById(R.id.tvMangaHits);
+            tvMangaDate = itemView.findViewById(R.id.tvMangaDate);
         }
 
         private void bind(final Manga mangaItem, final AdapterItemClickListener<Manga> listener) {

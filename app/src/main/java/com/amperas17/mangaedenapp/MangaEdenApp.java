@@ -18,7 +18,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MangaEdenApp extends Application {
     private static MangaApi mangaApi;
-    private Retrofit retrofit;
 
     public static MangaApi getMangaApi() {
         return mangaApi;
@@ -32,23 +31,21 @@ public class MangaEdenApp extends Application {
     }
 
     private void configureRetrofit() {
-        //Converter
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Page.class, new PageDeserializer())
                 .registerTypeAdapter(Chapter.class, new ChapterDeserializer())
                 .create();
 
-        //Logging
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(logging).build();
 
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://www.mangaeden.com/") //Base address part
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.mangaeden.com/")
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson)) //transform json into objects
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
 
-        mangaApi = retrofit.create(MangaApi.class); //api object that makes responses
+        mangaApi = retrofit.create(MangaApi.class);
     }
 }

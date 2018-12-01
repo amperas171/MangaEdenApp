@@ -50,9 +50,9 @@ class ChapterAdapter extends RecyclerView.Adapter<ChapterAdapter.ViewHolder> {
 
         private ViewHolder(final View itemView) {
             super(itemView);
-            tvMangaTitle = (TextView) itemView.findViewById(R.id.tvMangaTitle);
-            tvChapterTitle = (TextView) itemView.findViewById(R.id.tvChapterTitle);
-            tvDate = (TextView) itemView.findViewById(R.id.tvDate);
+            tvMangaTitle = itemView.findViewById(R.id.tvMangaTitle);
+            tvChapterTitle = itemView.findViewById(R.id.tvChapterTitle);
+            tvDate = itemView.findViewById(R.id.tvDate);
         }
 
         private void bind(final Chapter chapterItem, final OnItemClickListener listener) {

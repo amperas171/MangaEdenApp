@@ -31,7 +31,6 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterPr
 
     private ArrayList<Page> pageList = new ArrayList<>();
     private String chapterID;
-    private String chapterTitle;
 
     public static Intent newIntent(Context context, String chapterID, String chapterTitle) {
         Intent intent = new Intent(context, ChapterPagesActivity.class);
@@ -48,7 +47,7 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterPr
         chapterProvider = new ChapterProvider(this);
 
         chapterID = getIntent().getExtras().getString(CHAPTER_ID_TAG);
-        chapterTitle = getIntent().getExtras().getString(CHAPTER_TITLE_TAG);
+        String chapterTitle = getIntent().getExtras().getString(CHAPTER_TITLE_TAG);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -56,7 +55,7 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterPr
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        recyclerView = findViewById(R.id.recycler_view);
         galleryAdapter = new PageAdapter(new PageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Page page, int position) {
