@@ -1,8 +1,6 @@
 package com.amperas17.mangaedenapp.data;
 
 
-import android.content.Context;
-
 import com.amperas17.mangaedenapp.api.responseprovider.BaseResponseProvider;
 import com.amperas17.mangaedenapp.api.responseprovider.MangaListResponseProvider;
 import com.amperas17.mangaedenapp.model.manga.Manga;
@@ -13,11 +11,11 @@ import java.util.Collections;
 
 public class MangaListProvider implements BaseResponseProvider.IGetData<MangaListResponse> {
 
-    private Context context;
+    private IGetMangaList caller;
     private MangaListResponseProvider responseProvider;
 
-    public MangaListProvider(Context context) {
-        this.context = context;
+    public MangaListProvider(IGetMangaList caller) {
+        this.caller = caller;
         responseProvider = new MangaListResponseProvider(this);
     }
 
@@ -33,12 +31,12 @@ public class MangaListProvider implements BaseResponseProvider.IGetData<MangaLis
     public void onGetData(MangaListResponse response) {
         ArrayList<Manga> list = response.getMangas();
         Collections.sort(list);
-        ((IGetMangaList) context).onGetData(list);
+        caller.onGetData(list);
     }
 
     @Override
     public void onError(Throwable t) {
-        ((IGetMangaList) context).onError(t);
+        caller.onError(t);
     }
 
 

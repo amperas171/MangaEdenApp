@@ -1,7 +1,10 @@
 package com.amperas17.mangaedenapp.ui.mangalist;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amperas17.mangaedenapp.R;
-import com.amperas17.mangaedenapp.data.MangaListProvider;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.ui.mangafull.MangaFullActivity;
 import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
@@ -26,7 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MangaListActivity extends AppCompatActivity implements MangaListProvider.IGetMangaList {
+public class MangaListActivity extends AppCompatActivity {
 
     public static final String MANGA_LIST_TAG = "mangaList";
     public static final String MANGA_LIST_ALL_TAG = "mangaListAll";
@@ -36,8 +38,7 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
     public static final String SEARCH_TAG = "searchText";
     public static final String IS_SEARCHING_TAG = "isSearching";
 
-
-    private MangaListProvider mangaListProvider;
+    MangaListViewModel viewModel;
 
     ArrayList<Manga> mangaListAll = new ArrayList<>();
 
@@ -58,20 +59,21 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_list);
 
-        mangaListProvider = new MangaListProvider(this);
-
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                isUpdating = true;
-                callDataRequest();
-            }
-        });
-
         progressBar = findViewById(R.id.progressBar);
+        tvNoData = findViewById(R.id.tvNoData);
 
+        initAdapter();
+        initSwipeRefreshLayout();
+        initViewModel();
+
+        if (savedInstanceState != null) {
+            restoreState(savedInstanceState);
+        } else {
+            callDataRequest();
+        }
+    }
+
+    private void initAdapter() {
         mangaAdapter = new MangaAdapter(new AdapterItemClickListener<Manga>() {
             @Override
             public void onItemClick(Manga manga) {
@@ -86,38 +88,80 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
         RecyclerView recyclerView = findViewById(R.id.recyclerViewMangaList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mangaAdapter);
+    }
 
-        tvNoData = findViewById(R.id.tvNoData);
-        tvNoData.setVisibility(View.GONE);
-
-        if (savedInstanceState != null) {
-            ArrayList<Manga> list = savedInstanceState.getParcelableArrayList(MANGA_LIST_TAG);
-            addDataToAdapter(list);
-
-            ArrayList<Manga> listAll = savedInstanceState.getParcelableArrayList(MANGA_LIST_ALL_TAG);
-            if (mangaListAll != null && listAll != null) {
-                mangaListAll.addAll(listAll);
-            }
-
-            isSearching = savedInstanceState.getBoolean(IS_SEARCHING_TAG, false);
-            if (isSearching) {
-                searchText = savedInstanceState.getString(SEARCH_TAG);
-                swipeRefreshLayout.setEnabled(!isSearching);
-            }
-
-            stopRefresh();
-            isUpdating = savedInstanceState.getBoolean(IS_UPDATING_TAG);
-            if (isUpdating) {
-                swipeRefreshLayout.setRefreshing(true);
+    private void initSwipeRefreshLayout() {
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                isUpdating = true;
                 callDataRequest();
             }
+        });
+    }
 
-            isLoading = savedInstanceState.getBoolean(IS_LOADING_TAG);
-            if (isLoading) {
-                progressBar.setVisibility(View.VISIBLE);
-                callDataRequest();
+    private void initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(MangaListViewModel.class);
+        viewModel.getResource().observe(this, new Observer<MangaListResource>() {
+            @Override
+            public void onChanged(@Nullable MangaListResource resource) {
+                onResourceChanged(resource);
             }
+        });
+    }
+
+    private void onResourceChanged(MangaListResource resource) {
+        if (resource != null) {
+            if (resource.getMangas() != null)
+                onGetData(resource.getMangas());
+            if (resource.getThrowable() != null)
+                onError(resource.getThrowable());
+        }
+    }
+
+    private void onGetData(ArrayList<Manga> mangaList) {
+        this.mangaListAll = mangaList;
+        addDataToAdapter(mangaList);
+        stopRefresh();
+    }
+
+    private void onError(Throwable t) {
+        if (mangaAdapter.mangaList.isEmpty()) {
+            tvNoData.setText(getString(R.string.error, t.getMessage()));
+            tvNoData.setVisibility(View.VISIBLE);
         } else {
+            Toast.makeText(this, getString(R.string.error, t.getMessage()), Toast.LENGTH_LONG).show();
+        }
+        stopRefresh();
+    }
+
+    private void restoreState(Bundle savedInstanceState) {
+        ArrayList<Manga> list = savedInstanceState.getParcelableArrayList(MANGA_LIST_TAG);
+        addDataToAdapter(list);
+
+        ArrayList<Manga> listAll = savedInstanceState.getParcelableArrayList(MANGA_LIST_ALL_TAG);
+        if (mangaListAll != null && listAll != null) {
+            mangaListAll.addAll(listAll);
+        }
+
+        isSearching = savedInstanceState.getBoolean(IS_SEARCHING_TAG, false);
+        if (isSearching) {
+            searchText = savedInstanceState.getString(SEARCH_TAG);
+            swipeRefreshLayout.setEnabled(false);
+        }
+
+        stopRefresh();
+        isUpdating = savedInstanceState.getBoolean(IS_UPDATING_TAG);
+        if (isUpdating) {
+            swipeRefreshLayout.setRefreshing(true);
+            callDataRequest();
+        }
+
+        isLoading = savedInstanceState.getBoolean(IS_LOADING_TAG);
+        if (isLoading) {
+            progressBar.setVisibility(View.VISIBLE);
             callDataRequest();
         }
     }
@@ -133,15 +177,38 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
         outState.putBoolean(IS_SEARCHING_TAG, !searchView.isIconified());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mangaListProvider.cancelDataRequest();
-    }
 
     private void callDataRequest() {
         tvNoData.setVisibility(View.GONE);
-        mangaListProvider.callData();
+        viewModel.startLoading();
+    }
+
+    private void addDataToAdapter(List<Manga> mangas) {
+        mangaAdapter.mangaList.clear();
+        mangaAdapter.mangaList.addAll(mangas);
+        mangaAdapter.notifyDataSetChanged();
+    }
+
+    private void stopRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
+        progressBar.setVisibility(View.GONE);
+        isUpdating = false;
+        isLoading = false;
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        if (!searchView.isIconified()) {
+            addDataToAdapter(mangaListAll);
+            searchView.onActionViewCollapsed();
+            swipeRefreshLayout.setEnabled(true);
+        } else if (swipeRefreshLayout.isRefreshing()) {
+            viewModel.stopLoading();
+            stopRefresh();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -186,35 +253,6 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
         return true;
     }
 
-    @Override
-    public void onBackPressed() {
-        if (!searchView.isIconified()) {
-            addDataToAdapter(mangaListAll);
-            searchView.onActionViewCollapsed();
-            swipeRefreshLayout.setEnabled(true);
-        } else if (swipeRefreshLayout.isRefreshing()) {
-            mangaListProvider.cancelDataRequest();
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public void onGetData(ArrayList<Manga> mangaList) {
-        this.mangaListAll = mangaList;
-        addDataToAdapter(mangaList);
-        stopRefresh();
-    }
-
-    @Override
-    public void onError(Throwable t) {
-        tvNoData.setText("Error occurred: " + t.getMessage() + ". Check internet connection and try again.");
-        tvNoData.setVisibility(View.VISIBLE);
-        mangaAdapter.mangaList.clear();
-        mangaAdapter.notifyDataSetChanged();
-        stopRefresh();
-    }
-
     private void onQueryTextChanged(String pattern) {
         tvNoData.setVisibility(View.GONE);
         searchText = pattern;
@@ -235,7 +273,7 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
             @Override
             public void handleMessage(Message msg) {
                 if (resultList.isEmpty()) {
-                    tvNoData.setText("There is no match");
+                    tvNoData.setText(R.string.no_match);
                     tvNoData.setVisibility(View.VISIBLE);
                 }
                 addDataToAdapter(resultList);
@@ -271,18 +309,5 @@ public class MangaListActivity extends AppCompatActivity implements MangaListPro
             }
         });
         return resultList;
-    }
-
-    private void addDataToAdapter(List<Manga> mangas) {
-        mangaAdapter.mangaList.clear();
-        mangaAdapter.mangaList.addAll(mangas);
-        mangaAdapter.notifyDataSetChanged();
-    }
-
-    private void stopRefresh() {
-        swipeRefreshLayout.setRefreshing(false);
-        progressBar.setVisibility(View.GONE);
-        isUpdating = false;
-        isLoading = false;
     }
 }

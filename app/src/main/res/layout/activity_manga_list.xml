@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout
+<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swipeRefreshLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -9,16 +8,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerViewMangaList"
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/recyclerViewMangaList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/cardview_dark_background"
             android:padding="4dp"
             android:scrollbars="vertical"
-            android:background="@color/cardview_dark_background"
-            tools:context="com.amperas17.mangaedenapp.ui.mangalist.MangaListActivity">
+            tools:caller="com.amperas17.mangaedenapp.ui.mangalist.MangaListActivity">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -26,18 +24,19 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <TextView
             android:id="@+id/tvNoData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
-            android:textSize="20sp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:text="No Data"/>
+            android:gravity="center"
+            android:text="@string/no_data"
+            android:textSize="20sp"
+            android:visibility="gone" />
 
     </FrameLayout>
 
