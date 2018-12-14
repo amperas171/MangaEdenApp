@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.ui.mangalist;
+package com.amperas17.mangaedenapp.ui.mangalist.model;
 
 import com.amperas17.mangaedenapp.model.manga.Manga;
 

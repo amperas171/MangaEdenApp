@@ -1,5 +1,6 @@
-package com.amperas17.mangaedenapp.ui.mangalist;
+package com.amperas17.mangaedenapp.ui.mangalist.view;
 
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
 
 class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
 
-    ArrayList<Manga> mangaList;
+    private ArrayList<Manga> mangaList;
     private AdapterItemClickListener<Manga> listener;
 
     MangaAdapter(AdapterItemClickListener<Manga> listener) {
@@ -26,15 +27,16 @@ class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
         this.listener = listener;
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_manga, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         holder.bind(mangaList.get(position), listener);
     }
 
@@ -43,6 +45,9 @@ class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
         return mangaList.size();
     }
 
+    ArrayList<Manga> getMangaList() {
+        return mangaList;
+    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

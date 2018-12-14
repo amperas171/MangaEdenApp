@@ -1,9 +1,7 @@
-package com.amperas17.mangaedenapp.ui.mangalist;
+package com.amperas17.mangaedenapp.ui.mangalist.view;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -21,27 +19,23 @@ import android.widget.Toast;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.ui.mangafull.MangaFullActivity;
+import com.amperas17.mangaedenapp.ui.mangalist.model.MangaListResource;
+import com.amperas17.mangaedenapp.ui.mangalist.viewmodel.MangaListViewModel;
 import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+
 
 public class MangaListActivity extends AppCompatActivity {
 
     public static final String MANGA_LIST_TAG = "mangaList";
-    public static final String MANGA_LIST_ALL_TAG = "mangaListAll";
 
     public static final String IS_UPDATING_TAG = "isUpdating";
     public static final String IS_LOADING_TAG = "isLoading";
     public static final String SEARCH_TAG = "searchText";
     public static final String IS_SEARCHING_TAG = "isSearching";
 
-    MangaListViewModel viewModel;
-
-    ArrayList<Manga> mangaListAll = new ArrayList<>();
-
+    private MangaListViewModel viewModel;
     private MangaAdapter mangaAdapter;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -122,13 +116,16 @@ public class MangaListActivity extends AppCompatActivity {
     }
 
     private void onGetData(ArrayList<Manga> mangaList) {
-        this.mangaListAll = mangaList;
         addDataToAdapter(mangaList);
         stopRefresh();
+        if (mangaList.isEmpty()) {
+            tvNoData.setText(R.string.no_match);
+            tvNoData.setVisibility(View.VISIBLE);
+        }
     }
 
     private void onError(Throwable t) {
-        if (mangaAdapter.mangaList.isEmpty()) {
+        if (mangaAdapter.getMangaList().isEmpty()) {
             tvNoData.setText(getString(R.string.error, t.getMessage()));
             tvNoData.setVisibility(View.VISIBLE);
         } else {
@@ -140,11 +137,6 @@ public class MangaListActivity extends AppCompatActivity {
     private void restoreState(Bundle savedInstanceState) {
         ArrayList<Manga> list = savedInstanceState.getParcelableArrayList(MANGA_LIST_TAG);
         addDataToAdapter(list);
-
-        ArrayList<Manga> listAll = savedInstanceState.getParcelableArrayList(MANGA_LIST_ALL_TAG);
-        if (mangaListAll != null && listAll != null) {
-            mangaListAll.addAll(listAll);
-        }
 
         isSearching = savedInstanceState.getBoolean(IS_SEARCHING_TAG, false);
         if (isSearching) {
@@ -169,8 +161,7 @@ public class MangaListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(MANGA_LIST_TAG, mangaAdapter.mangaList);
-        outState.putParcelableArrayList(MANGA_LIST_ALL_TAG, mangaListAll);
+        outState.putParcelableArrayList(MANGA_LIST_TAG, mangaAdapter.getMangaList());
         outState.putBoolean(IS_UPDATING_TAG, isUpdating);
         outState.putBoolean(IS_LOADING_TAG, isLoading);
         outState.putString(SEARCH_TAG, searchText);
@@ -183,9 +174,9 @@ public class MangaListActivity extends AppCompatActivity {
         viewModel.startLoading();
     }
 
-    private void addDataToAdapter(List<Manga> mangas) {
-        mangaAdapter.mangaList.clear();
-        mangaAdapter.mangaList.addAll(mangas);
+    private void addDataToAdapter(ArrayList<Manga> mangas) {
+        mangaAdapter.getMangaList().clear();
+        mangaAdapter.getMangaList().addAll(mangas);
         mangaAdapter.notifyDataSetChanged();
     }
 
@@ -200,7 +191,6 @@ public class MangaListActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (!searchView.isIconified()) {
-            addDataToAdapter(mangaListAll);
             searchView.onActionViewCollapsed();
             swipeRefreshLayout.setEnabled(true);
         } else if (swipeRefreshLayout.isRefreshing()) {
@@ -256,58 +246,6 @@ public class MangaListActivity extends AppCompatActivity {
     private void onQueryTextChanged(String pattern) {
         tvNoData.setVisibility(View.GONE);
         searchText = pattern;
-        if (!mangaListAll.isEmpty()) {
-            if (pattern.isEmpty()) {
-                addDataToAdapter(mangaListAll);
-            } else {
-                runSearchInNewThread(pattern);
-            }
-        }
-    }
-
-    private void runSearchInNewThread(final String pattern) {
-
-        final List<Manga> resultList = new ArrayList<>();
-
-        final Handler handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                if (resultList.isEmpty()) {
-                    tvNoData.setText(R.string.no_match);
-                    tvNoData.setVisibility(View.VISIBLE);
-                }
-                addDataToAdapter(resultList);
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        };
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                resultList.addAll(findForMatchesInTitle(pattern));
-                handler.sendEmptyMessage(0);
-            }
-        };
-
-        swipeRefreshLayout.setRefreshing(true);
-        Thread thread = new Thread(runnable);
-        thread.start();
-    }
-
-    private ArrayList<Manga> findForMatchesInTitle(String pattern) {
-        ArrayList<Manga> resultList = new ArrayList<>();
-        for (Manga manga : mangaListAll) {
-            if (manga.getTitle().toLowerCase().startsWith(pattern.toLowerCase())
-                    || manga.getTitle().toLowerCase().contains(" " + pattern.toLowerCase())) {
-                resultList.add(manga);
-            }
-        }
-        Collections.sort(resultList, new Comparator<Manga>() {
-            @Override
-            public int compare(Manga manga1, Manga manga2) {
-                return manga2.getHits() - manga1.getHits();
-            }
-        });
-        return resultList;
+        viewModel.findData(pattern);
     }
 }
