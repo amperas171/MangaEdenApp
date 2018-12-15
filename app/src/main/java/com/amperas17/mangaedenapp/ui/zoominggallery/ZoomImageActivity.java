@@ -4,12 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.model.page.Page;
+import com.amperas17.mangaedenapp.utils.ActivityUtils;
 
 import java.util.ArrayList;
 
@@ -32,8 +30,7 @@ public class ZoomImageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        makeFullScreen();
+        ActivityUtils.makeFullScreen(this);
         setContentView(R.layout.activity_zoom);
         initPager();
     }
@@ -58,12 +55,5 @@ public class ZoomImageActivity extends AppCompatActivity {
         ZoomPagerAdapter adapter = new ZoomPagerAdapter(pageList);
         pager.setAdapter(adapter);
         pager.setCurrentItem(position);
-    }
-
-    private void makeFullScreen() {
-        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 }

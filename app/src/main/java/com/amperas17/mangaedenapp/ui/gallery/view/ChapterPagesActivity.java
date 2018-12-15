@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.WindowManager;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.data.ChapterRepository;
@@ -18,6 +17,7 @@ import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.page.Page;
 import com.amperas17.mangaedenapp.ui.gallery.viewmodel.ChapterPagesViewModel;
 import com.amperas17.mangaedenapp.ui.zoominggallery.ZoomImageActivity;
+import com.amperas17.mangaedenapp.utils.ActivityUtils;
 
 import java.util.ArrayList;
 
@@ -47,12 +47,10 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter_pages);
+        ActivityUtils.hideStatusBar(this);
 
         String chapterID = getIntent().getExtras().getString(CHAPTER_ID_TAG);
         String chapterTitle = getIntent().getExtras().getString(CHAPTER_TITLE_TAG);
-
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         initActionBar();
         initAdapter();
