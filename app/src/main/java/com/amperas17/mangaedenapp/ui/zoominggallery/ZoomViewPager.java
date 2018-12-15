@@ -8,7 +8,6 @@ import android.view.MotionEvent;
 /**
  * blocks too fast scrolling
  */
-
 public class ZoomViewPager extends ViewPager {
 
     public ZoomViewPager(Context context) {
@@ -38,6 +37,4 @@ public class ZoomViewPager extends ViewPager {
         }
         return false;
     }
-
-
 }

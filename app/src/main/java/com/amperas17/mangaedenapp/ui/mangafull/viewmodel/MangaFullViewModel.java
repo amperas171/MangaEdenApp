@@ -7,8 +7,10 @@ import android.arch.lifecycle.ViewModel;
 import com.amperas17.mangaedenapp.data.MangaFullRepository;
 import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
+import com.amperas17.mangaedenapp.utils.Caller;
 
-public class MangaFullViewModel extends ViewModel implements MangaFullRepository.IGetMangaFull {
+
+public class MangaFullViewModel extends ViewModel implements Caller<MangaFullInfo> {
 
     private MutableLiveData<Resource<MangaFullInfo>> resource;
     private MangaFullRepository repository;

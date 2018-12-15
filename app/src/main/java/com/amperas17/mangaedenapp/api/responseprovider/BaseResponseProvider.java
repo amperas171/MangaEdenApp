@@ -1,15 +1,18 @@
 package com.amperas17.mangaedenapp.api.responseprovider;
 
+import com.amperas17.mangaedenapp.utils.Caller;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public abstract class BaseResponseProvider<T, U> {
 
-    private IGetData<T> caller;
+    private Caller<T> caller;
     private Call<T> call;
 
-    public BaseResponseProvider(IGetData<T> caller) {
+    public BaseResponseProvider(Caller<T> caller) {
         this.caller = caller;
     }
 
@@ -33,11 +36,5 @@ public abstract class BaseResponseProvider<T, U> {
     public void stopRequest() {
         if (call != null && call.isExecuted())
             call.cancel();
-    }
-
-    public interface IGetData<T> {
-        void onGetData(T response);
-
-        void onError(Throwable t);
     }
 }

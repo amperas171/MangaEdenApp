@@ -1,9 +1,9 @@
 package com.amperas17.mangaedenapp.model.manga;
 
-
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 
 import java.util.ArrayList;
+
 
 public class MangaFullInfo {
     private String artist;

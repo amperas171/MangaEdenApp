@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+
 class MangaListUtils {
     static ArrayList<Manga> findForMatchesInTitle(String pattern, ArrayList<Manga> mangaListAll) {
         ArrayList<Manga> resultList = new ArrayList<>();

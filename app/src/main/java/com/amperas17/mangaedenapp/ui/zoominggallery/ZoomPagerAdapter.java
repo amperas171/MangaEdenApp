@@ -60,6 +60,4 @@ public class ZoomPagerAdapter extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object view) {
         container.removeView((View) view);
     }
-
-
 }

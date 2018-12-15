@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
-import com.amperas17.mangaedenapp.data.MangaFullRepository;
 import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
@@ -34,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class MangaFullActivity extends AppCompatActivity implements MangaFullRepository.IGetMangaFull {
+public class MangaFullActivity extends AppCompatActivity {
 
     public static final String MANGA_ID_TAG = "MangaID";
     public static final String MANGA_TITLE_TAG = "MangaTitle";
@@ -140,12 +139,10 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
     public void onGetData(MangaFullInfo mangaFullInfo) {
         initView(mangaFullInfo);
     }
 
-    @Override
     public void onError(Throwable t) {
         progressBar.setVisibility(View.GONE);
         Toast.makeText(MangaFullActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();

@@ -1,18 +1,19 @@
 package com.amperas17.mangaedenapp.data;
 
-import com.amperas17.mangaedenapp.api.responseprovider.BaseResponseProvider;
 import com.amperas17.mangaedenapp.api.responseprovider.ChapterResponseProvider;
 import com.amperas17.mangaedenapp.model.page.Page;
 import com.amperas17.mangaedenapp.model.page.PageListResponse;
+import com.amperas17.mangaedenapp.utils.Caller;
 
 import java.util.ArrayList;
 
-public class ChapterRepository implements BaseResponseProvider.IGetData<PageListResponse> {
 
-    private IGetChapter caller;
+public class ChapterRepository implements Caller<PageListResponse> {
+
+    private Caller<ArrayList<Page>> caller;
     private ChapterResponseProvider responseProvider;
 
-    public ChapterRepository(IGetChapter caller) {
+    public ChapterRepository(Caller<ArrayList<Page>> caller) {
         this.caller = caller;
         responseProvider = new ChapterResponseProvider(this);
     }
@@ -36,12 +37,5 @@ public class ChapterRepository implements BaseResponseProvider.IGetData<PageList
     @Override
     public void onError(Throwable t) {
         caller.onError(t);
-    }
-
-
-    public interface IGetChapter {
-        void onGetData(ArrayList<Page> pages);
-
-        void onError(Throwable t);
     }
 }

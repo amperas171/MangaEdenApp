@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.utils.adapter;
+package com.amperas17.mangaedenapp.utils;
 
 
 public interface AdapterItemClickListener<T> {

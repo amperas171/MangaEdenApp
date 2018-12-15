@@ -7,10 +7,12 @@ import android.arch.lifecycle.ViewModel;
 import com.amperas17.mangaedenapp.data.ChapterRepository;
 import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.page.Page;
+import com.amperas17.mangaedenapp.utils.Caller;
 
 import java.util.ArrayList;
 
-public class ChapterPagesViewModel extends ViewModel implements ChapterRepository.IGetChapter{
+
+public class ChapterPagesViewModel extends ViewModel implements Caller<ArrayList<Page>> {
 
     private MutableLiveData<Resource<ArrayList<Page>>> resource;
     private ChapterRepository repository;

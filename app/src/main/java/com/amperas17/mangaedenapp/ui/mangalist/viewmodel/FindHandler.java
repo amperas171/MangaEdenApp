@@ -3,6 +3,7 @@ package com.amperas17.mangaedenapp.ui.mangalist.viewmodel;
 import android.os.Handler;
 import android.os.Message;
 
+
 import com.amperas17.mangaedenapp.model.manga.Manga;
 
 import java.lang.ref.WeakReference;

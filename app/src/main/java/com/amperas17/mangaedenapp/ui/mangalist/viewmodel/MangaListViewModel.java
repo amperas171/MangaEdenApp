@@ -7,10 +7,12 @@ import android.arch.lifecycle.ViewModel;
 import com.amperas17.mangaedenapp.data.MangaListRepository;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.Resource;
+import com.amperas17.mangaedenapp.utils.Caller;
+
 
 import java.util.ArrayList;
 
-public class MangaListViewModel extends ViewModel implements MangaListRepository.IGetMangaList, FindHandler.Caller {
+public class MangaListViewModel extends ViewModel implements Caller<ArrayList<Manga>>, FindHandler.Caller {
 
     private MutableLiveData<Resource<ArrayList<Manga>>> resource;
     private MangaListRepository repository;
@@ -54,7 +56,7 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
         isLoading = false;
     }
 
-    private void updateMangaListAll(ArrayList<Manga> mangaList){
+    private void updateMangaListAll(ArrayList<Manga> mangaList) {
         mangaListAll.clear();
         mangaListAll.addAll(mangaList);
     }

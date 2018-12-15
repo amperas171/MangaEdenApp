@@ -12,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.amperas17.mangaedenapp.R;
-import com.amperas17.mangaedenapp.data.ChapterRepository;
 import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.page.Page;
 import com.amperas17.mangaedenapp.ui.gallery.viewmodel.ChapterPagesViewModel;
@@ -21,7 +20,8 @@ import com.amperas17.mangaedenapp.utils.ActivityUtils;
 
 import java.util.ArrayList;
 
-public class ChapterPagesActivity extends AppCompatActivity implements ChapterRepository.IGetChapter {
+
+public class ChapterPagesActivity extends AppCompatActivity {
 
     public static final String CHAPTER_ID_TAG = "ChapterID";
     public static final String CHAPTER_TITLE_TAG = "ChapterTitle";
@@ -123,13 +123,11 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterRe
         galleryAdapter.notifyDataSetChanged();
     }
 
-    @Override
     public void onGetData(ArrayList<Page> pages) {
         pageList.addAll(pages);
         addDataToAdapter(pages);
     }
 
-    @Override
     public void onError(Throwable t) {
     }
 }

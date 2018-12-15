@@ -1,16 +1,16 @@
 package com.amperas17.mangaedenapp.data;
 
-import com.amperas17.mangaedenapp.api.responseprovider.BaseResponseProvider;
 import com.amperas17.mangaedenapp.api.responseprovider.MangaFullResponseProvider;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
+import com.amperas17.mangaedenapp.utils.Caller;
 
 
-public class MangaFullRepository implements BaseResponseProvider.IGetData<MangaFullInfo> {
+public class MangaFullRepository implements Caller<MangaFullInfo> {
 
-    private IGetMangaFull caller;
+    private Caller<MangaFullInfo> caller;
     private MangaFullResponseProvider responseProvider;
 
-    public MangaFullRepository(IGetMangaFull caller) {
+    public MangaFullRepository(Caller<MangaFullInfo> caller) {
         this.caller = caller;
         responseProvider = new MangaFullResponseProvider(this);
     }
@@ -31,12 +31,5 @@ public class MangaFullRepository implements BaseResponseProvider.IGetData<MangaF
     @Override
     public void onError(Throwable t) {
         caller.onError(t);
-    }
-
-
-    public interface IGetMangaFull {
-        void onGetData(MangaFullInfo mangaFullInfo);
-
-        void onError(Throwable t);
     }
 }

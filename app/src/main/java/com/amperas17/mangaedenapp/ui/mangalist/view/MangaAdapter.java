@@ -11,11 +11,12 @@ import android.widget.TextView;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.model.manga.Manga;
-import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
+import com.amperas17.mangaedenapp.utils.AdapterItemClickListener;
 import com.amperas17.mangaedenapp.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+
 
 class MangaAdapter extends RecyclerView.Adapter<MangaAdapter.ViewHolder> {
 

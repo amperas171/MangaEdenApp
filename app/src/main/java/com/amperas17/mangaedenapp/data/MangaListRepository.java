@@ -1,20 +1,20 @@
 package com.amperas17.mangaedenapp.data;
 
-
-import com.amperas17.mangaedenapp.api.responseprovider.BaseResponseProvider;
 import com.amperas17.mangaedenapp.api.responseprovider.MangaListResponseProvider;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
+import com.amperas17.mangaedenapp.utils.Caller;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MangaListRepository implements BaseResponseProvider.IGetData<MangaListResponse> {
 
-    private IGetMangaList caller;
+public class MangaListRepository implements Caller<MangaListResponse> {
+
+    private Caller<ArrayList<Manga>> caller;
     private MangaListResponseProvider responseProvider;
 
-    public MangaListRepository(IGetMangaList caller) {
+    public MangaListRepository(Caller<ArrayList<Manga>> caller) {
         this.caller = caller;
         responseProvider = new MangaListResponseProvider(this);
     }
@@ -37,12 +37,5 @@ public class MangaListRepository implements BaseResponseProvider.IGetData<MangaL
     @Override
     public void onError(Throwable t) {
         caller.onError(t);
-    }
-
-
-    public interface IGetMangaList {
-        void onGetData(ArrayList<Manga> mangaList);
-
-        void onError(Throwable t);
     }
 }

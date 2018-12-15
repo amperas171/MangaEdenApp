@@ -1,13 +1,14 @@
 package com.amperas17.mangaedenapp.api.responseprovider;
 
-
 import com.amperas17.mangaedenapp.MangaEdenApp;
 import com.amperas17.mangaedenapp.model.page.PageListResponse;
+import com.amperas17.mangaedenapp.utils.Caller;
 
 import retrofit2.Call;
 
+
 public class ChapterResponseProvider extends BaseResponseProvider<PageListResponse, String> {
-    public ChapterResponseProvider(IGetData<PageListResponse> caller) {
+    public ChapterResponseProvider(Caller<PageListResponse> caller) {
         super(caller);
     }
 

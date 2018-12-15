@@ -21,7 +21,7 @@ import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.ui.mangafull.view.MangaFullActivity;
 import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.ui.mangalist.viewmodel.MangaListViewModel;
-import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
+import com.amperas17.mangaedenapp.utils.AdapterItemClickListener;
 
 import java.util.ArrayList;
 
