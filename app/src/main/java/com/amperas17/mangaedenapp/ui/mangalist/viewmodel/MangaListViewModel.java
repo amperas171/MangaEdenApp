@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class MangaListViewModel extends ViewModel implements MangaListRepository.IGetMangaList, FindHandler.Caller {
 
     private MutableLiveData<Resource<ArrayList<Manga>>> resource;
-    private MangaListRepository mangaListRepository;
+    private MangaListRepository repository;
     private FindHandler handler;
 
     private ArrayList<Manga> mangaListAll = new ArrayList<>();
@@ -23,8 +23,8 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
         if (resource == null) {
             resource = new MutableLiveData<>();
         }
-        if (mangaListRepository == null) {
-            mangaListRepository = new MangaListRepository(this);
+        if (repository == null) {
+            repository = new MangaListRepository(this);
         }
         if (handler == null) {
             handler = new FindHandler(this);
@@ -34,7 +34,7 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
 
     private void loadData() {
         isLoading = true;
-        mangaListRepository.callData();
+        repository.callData();
     }
 
     public void startLoading() {
@@ -44,7 +44,7 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
 
     public void stopLoading() {
         if (isLoading)
-            mangaListRepository.cancelDataRequest();
+            repository.cancelDataRequest();
     }
 
     @Override

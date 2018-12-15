@@ -1,8 +1,11 @@
-package com.amperas17.mangaedenapp.ui.mangafull;
+package com.amperas17.mangaedenapp.ui.mangafull.view;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -19,9 +22,11 @@ import android.widget.Toast;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
 import com.amperas17.mangaedenapp.data.MangaFullRepository;
+import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
 import com.amperas17.mangaedenapp.ui.gallery.ChapterPagesActivity;
+import com.amperas17.mangaedenapp.ui.mangafull.viewmodel.MangaFullViewModel;
 import com.amperas17.mangaedenapp.utils.DateUtils;
 import com.squareup.picasso.Picasso;
 
@@ -34,7 +39,7 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
     public static final String MANGA_ID_TAG = "MangaID";
     public static final String MANGA_TITLE_TAG = "MangaTitle";
 
-    private MangaFullRepository mangaFullRepository;
+    private MangaFullViewModel viewModel;
 
     private ChapterAdapter chapterAdapter;
 
@@ -56,8 +61,6 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_full);
 
-        mangaFullRepository = new MangaFullRepository(this);
-
         mangaFullContainer = findViewById(R.id.mangaFullContainer);
         tvReleased = findViewById(R.id.tvReleased);
         tvHits = findViewById(R.id.tvHits);
@@ -72,6 +75,7 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
 
         initActionBar(mangaTitle);
         initAdapter();
+        initViewModel();
 
         callDataRequest(mangaID);
     }
@@ -102,10 +106,29 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
         ViewCompat.setNestedScrollingEnabled(recyclerView, false);
     }
 
+    private void initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(MangaFullViewModel.class);
+        viewModel.getResource().observe(this, new Observer<Resource<MangaFullInfo>>() {
+            @Override
+            public void onChanged(@Nullable Resource<MangaFullInfo> resource) {
+                onResourceChanged(resource);
+            }
+        });
+    }
+
+    private void onResourceChanged(Resource<MangaFullInfo> resource) {
+        if (resource != null) {
+            if (resource.getData() != null)
+                onGetData(resource.getData());
+            if (resource.getThrowable() != null)
+                onError(resource.getThrowable());
+        }
+    }
+
     private void callDataRequest(String mangaID) {
         progressBar.setVisibility(View.VISIBLE);
         mangaFullContainer.setVisibility(View.GONE);
-        mangaFullRepository.callData(mangaID);
+        viewModel.startLoading(mangaID);
     }
 
     @Override
@@ -130,16 +153,9 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (progressBar.getVisibility() == View.VISIBLE)
-            mangaFullRepository.cancelDataRequest();
-    }
-
-    @Override
     public void onBackPressed() {
         if (progressBar.getVisibility() == View.VISIBLE)
-            mangaFullRepository.cancelDataRequest();
+            viewModel.stopLoading();
         super.onBackPressed();
     }
 

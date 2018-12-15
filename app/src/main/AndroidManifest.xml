@@ -22,7 +22,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.mangafull.MangaFullActivity"/>
+        <activity android:name=".ui.mangafull.view.MangaFullActivity"/>
 
         <activity android:name=".ui.gallery.ChapterPagesActivity"/>
 
