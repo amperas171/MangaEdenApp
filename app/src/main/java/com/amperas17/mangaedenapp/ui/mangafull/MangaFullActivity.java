@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.api.MangaApiHelper;
-import com.amperas17.mangaedenapp.data.MangaFullProvider;
+import com.amperas17.mangaedenapp.data.MangaFullRepository;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
 import com.amperas17.mangaedenapp.ui.gallery.ChapterPagesActivity;
@@ -29,12 +29,12 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class MangaFullActivity extends AppCompatActivity implements MangaFullProvider.IGetMangaFull {
+public class MangaFullActivity extends AppCompatActivity implements MangaFullRepository.IGetMangaFull {
 
     public static final String MANGA_ID_TAG = "MangaID";
     public static final String MANGA_TITLE_TAG = "MangaTitle";
 
-    private MangaFullProvider mangaFullProvider;
+    private MangaFullRepository mangaFullRepository;
 
     private ChapterAdapter chapterAdapter;
     private RecyclerView recyclerView;
@@ -60,7 +60,7 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manga_full);
 
-        mangaFullProvider = new MangaFullProvider(this);
+        mangaFullRepository = new MangaFullRepository(this);
 
         mangaFullContainer = findViewById(R.id.mangaFullContainer);
         tvReleased = findViewById(R.id.tvReleased);
@@ -102,7 +102,7 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
     private void callDataRequest() {
         progressBar.setVisibility(View.VISIBLE);
         mangaFullContainer.setVisibility(View.GONE);
-        mangaFullProvider.callData(mangaID);
+        mangaFullRepository.callData(mangaID);
     }
 
     @Override
@@ -130,13 +130,13 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullPro
     protected void onPause() {
         super.onPause();
         if (progressBar.getVisibility() == View.VISIBLE)
-            mangaFullProvider.cancelDataRequest();
+            mangaFullRepository.cancelDataRequest();
     }
 
     @Override
     public void onBackPressed() {
         if (progressBar.getVisibility() == View.VISIBLE)
-            mangaFullProvider.cancelDataRequest();
+            mangaFullRepository.cancelDataRequest();
         super.onBackPressed();
     }
 

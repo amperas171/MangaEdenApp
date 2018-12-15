@@ -7,12 +7,12 @@ import com.amperas17.mangaedenapp.api.responseprovider.BaseResponseProvider;
 import com.amperas17.mangaedenapp.api.responseprovider.MangaFullResponseProvider;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
 
-public class MangaFullProvider implements BaseResponseProvider.IGetData<MangaFullInfo> {
+public class MangaFullRepository implements BaseResponseProvider.IGetData<MangaFullInfo> {
 
     private Context context;
     private MangaFullResponseProvider responseProvider;
 
-    public MangaFullProvider(Context context) {
+    public MangaFullRepository(Context context) {
         this.context = context;
         responseProvider = new MangaFullResponseProvider(this);
     }

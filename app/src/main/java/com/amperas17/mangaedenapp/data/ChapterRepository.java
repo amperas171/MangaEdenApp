@@ -10,12 +10,12 @@ import com.amperas17.mangaedenapp.model.page.PageListResponse;
 
 import java.util.ArrayList;
 
-public class ChapterProvider implements BaseResponseProvider.IGetData<PageListResponse> {
+public class ChapterRepository implements BaseResponseProvider.IGetData<PageListResponse> {
 
     private Context context;
     private ChapterResponseProvider responseProvider;
 
-    public ChapterProvider(Context context) {
+    public ChapterRepository(Context context) {
         this.context = context;
         responseProvider = new ChapterResponseProvider(this);
     }

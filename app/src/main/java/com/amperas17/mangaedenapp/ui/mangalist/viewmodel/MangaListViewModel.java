@@ -4,16 +4,16 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
-import com.amperas17.mangaedenapp.data.MangaListProvider;
+import com.amperas17.mangaedenapp.data.MangaListRepository;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.ui.mangalist.model.MangaListResource;
 
 import java.util.ArrayList;
 
-public class MangaListViewModel extends ViewModel implements MangaListProvider.IGetMangaList, FindHandler.Caller {
+public class MangaListViewModel extends ViewModel implements MangaListRepository.IGetMangaList, FindHandler.Caller {
 
     private MutableLiveData<MangaListResource> resource;
-    private MangaListProvider mangaListProvider;
+    private MangaListRepository mangaListRepository;
     private FindHandler handler;
 
     private ArrayList<Manga> mangaListAll = new ArrayList<>();
@@ -23,8 +23,8 @@ public class MangaListViewModel extends ViewModel implements MangaListProvider.I
         if (resource == null) {
             resource = new MutableLiveData<>();
         }
-        if (mangaListProvider == null) {
-            mangaListProvider = new MangaListProvider(this);
+        if (mangaListRepository == null) {
+            mangaListRepository = new MangaListRepository(this);
         }
         if (handler == null) {
             handler = new FindHandler(this);
@@ -34,7 +34,7 @@ public class MangaListViewModel extends ViewModel implements MangaListProvider.I
 
     private void loadData() {
         isLoading = true;
-        mangaListProvider.callData();
+        mangaListRepository.callData();
     }
 
     public void startLoading() {
@@ -44,7 +44,7 @@ public class MangaListViewModel extends ViewModel implements MangaListProvider.I
 
     public void stopLoading() {
         if (isLoading)
-            mangaListProvider.cancelDataRequest();
+            mangaListRepository.cancelDataRequest();
     }
 
     @Override

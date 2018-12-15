@@ -9,12 +9,12 @@ import com.amperas17.mangaedenapp.model.manga.MangaListResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class MangaListProvider implements BaseResponseProvider.IGetData<MangaListResponse> {
+public class MangaListRepository implements BaseResponseProvider.IGetData<MangaListResponse> {
 
     private IGetMangaList caller;
     private MangaListResponseProvider responseProvider;
 
-    public MangaListProvider(IGetMangaList caller) {
+    public MangaListRepository(IGetMangaList caller) {
         this.caller = caller;
         responseProvider = new MangaListResponseProvider(this);
     }
