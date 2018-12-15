@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.ui.mangafull.MangaFullActivity;
-import com.amperas17.mangaedenapp.ui.mangalist.model.MangaListResource;
+import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.ui.mangalist.viewmodel.MangaListViewModel;
 import com.amperas17.mangaedenapp.utils.adapter.AdapterItemClickListener;
 
@@ -98,18 +98,18 @@ public class MangaListActivity extends AppCompatActivity {
 
     private void initViewModel() {
         viewModel = ViewModelProviders.of(this).get(MangaListViewModel.class);
-        viewModel.getResource().observe(this, new Observer<MangaListResource>() {
+        viewModel.getResource().observe(this, new Observer<Resource<ArrayList<Manga>>>() {
             @Override
-            public void onChanged(@Nullable MangaListResource resource) {
+            public void onChanged(@Nullable Resource<ArrayList<Manga>> resource) {
                 onResourceChanged(resource);
             }
         });
     }
 
-    private void onResourceChanged(MangaListResource resource) {
+    private void onResourceChanged(Resource<ArrayList<Manga>> resource) {
         if (resource != null) {
-            if (resource.getMangas() != null)
-                onGetData(resource.getMangas());
+            if (resource.getData() != null)
+                onGetData(resource.getData());
             if (resource.getThrowable() != null)
                 onError(resource.getThrowable());
         }

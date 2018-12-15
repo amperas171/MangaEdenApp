@@ -6,20 +6,20 @@ import android.arch.lifecycle.ViewModel;
 
 import com.amperas17.mangaedenapp.data.MangaListRepository;
 import com.amperas17.mangaedenapp.model.manga.Manga;
-import com.amperas17.mangaedenapp.ui.mangalist.model.MangaListResource;
+import com.amperas17.mangaedenapp.model.Resource;
 
 import java.util.ArrayList;
 
 public class MangaListViewModel extends ViewModel implements MangaListRepository.IGetMangaList, FindHandler.Caller {
 
-    private MutableLiveData<MangaListResource> resource;
+    private MutableLiveData<Resource<ArrayList<Manga>>> resource;
     private MangaListRepository mangaListRepository;
     private FindHandler handler;
 
     private ArrayList<Manga> mangaListAll = new ArrayList<>();
     private boolean isLoading;
 
-    public LiveData<MangaListResource> getResource() {
+    public LiveData<Resource<ArrayList<Manga>>> getResource() {
         if (resource == null) {
             resource = new MutableLiveData<>();
         }
@@ -49,7 +49,7 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
 
     @Override
     public void onGetData(ArrayList<Manga> mangaList) {
-        resource.postValue(new MangaListResource(mangaList));
+        resource.postValue(new Resource<>(mangaList));
         updateMangaListAll(mangaList);
         isLoading = false;
     }
@@ -61,7 +61,7 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
 
     @Override
     public void onError(Throwable t) {
-        resource.postValue(new MangaListResource(t));
+        resource.postValue(new Resource<ArrayList<Manga>>(t));
         isLoading = false;
     }
 
@@ -79,7 +79,7 @@ public class MangaListViewModel extends ViewModel implements MangaListRepository
 
     @Override
     public void postSearchResult(ArrayList<Manga> mangaList) {
-        resource.postValue(new MangaListResource(mangaList));
+        resource.postValue(new Resource<>(mangaList));
         isLoading = false;
     }
 

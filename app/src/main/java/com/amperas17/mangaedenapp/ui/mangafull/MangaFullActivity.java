@@ -37,15 +37,11 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
     private MangaFullRepository mangaFullRepository;
 
     private ChapterAdapter chapterAdapter;
-    private RecyclerView recyclerView;
 
     private NestedScrollView mangaFullContainer;
     private TextView tvReleased, tvHits, tvAuthor, tvCategories, tvDescription;
     private ImageView ivFullMangaImage;
     private ProgressBar progressBar;
-
-    private String mangaID;
-    private String mangaTitle;
 
 
     public static Intent newIntent(Context context, String mangaID, String mangaTitle) {
@@ -71,14 +67,23 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
         ivFullMangaImage = findViewById(R.id.ivFullMangaImage);
         progressBar = findViewById(R.id.progressBar);
 
-        mangaID = getIntent().getExtras().getString(MANGA_ID_TAG);
-        mangaTitle = getIntent().getExtras().getString(MANGA_TITLE_TAG);
+        String mangaID = getIntent().getExtras().getString(MANGA_ID_TAG);
+        String mangaTitle = getIntent().getExtras().getString(MANGA_TITLE_TAG);
 
+        initActionBar(mangaTitle);
+        initAdapter();
+
+        callDataRequest(mangaID);
+    }
+
+    private void initActionBar(String mangaTitle) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle(mangaTitle);
         }
+    }
 
+    private void initAdapter() {
         chapterAdapter = new ChapterAdapter(new ChapterAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Chapter chapter) {
@@ -91,15 +96,13 @@ public class MangaFullActivity extends AppCompatActivity implements MangaFullRep
             }
         });
 
-        recyclerView = findViewById(R.id.recyclerViewChapterList);
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewChapterList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(chapterAdapter);
         ViewCompat.setNestedScrollingEnabled(recyclerView, false);
-
-        callDataRequest();
     }
 
-    private void callDataRequest() {
+    private void callDataRequest(String mangaID) {
         progressBar.setVisibility(View.VISIBLE);
         mangaFullContainer.setVisibility(View.GONE);
         mangaFullRepository.callData(mangaID);
