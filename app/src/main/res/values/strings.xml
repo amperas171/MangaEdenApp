@@ -6,5 +6,6 @@
     <string name="error">"Error occurred: %1$s. Check internet connection and try again."</string>
     <string name="no_data">No Data</string>
     <string name="no_match">There is no match</string>
+    <string name="search">Search</string>
 
 </resources>
