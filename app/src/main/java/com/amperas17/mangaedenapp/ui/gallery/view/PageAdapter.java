@@ -1,4 +1,4 @@
-package com.amperas17.mangaedenapp.ui.gallery;
+package com.amperas17.mangaedenapp.ui.gallery.view;
 
 
 import android.content.res.Configuration;

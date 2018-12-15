@@ -25,7 +25,7 @@ import com.amperas17.mangaedenapp.data.MangaFullRepository;
 import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.chapter.Chapter;
 import com.amperas17.mangaedenapp.model.manga.MangaFullInfo;
-import com.amperas17.mangaedenapp.ui.gallery.ChapterPagesActivity;
+import com.amperas17.mangaedenapp.ui.gallery.view.ChapterPagesActivity;
 import com.amperas17.mangaedenapp.ui.mangafull.viewmodel.MangaFullViewModel;
 import com.amperas17.mangaedenapp.utils.DateUtils;
 import com.squareup.picasso.Picasso;

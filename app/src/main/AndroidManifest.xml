@@ -24,7 +24,7 @@
 
         <activity android:name=".ui.mangafull.view.MangaFullActivity"/>
 
-        <activity android:name=".ui.gallery.ChapterPagesActivity"/>
+        <activity android:name=".ui.gallery.view.ChapterPagesActivity"/>
 
         <activity android:name=".ui.zoominggallery.ZoomImageActivity"/>
 

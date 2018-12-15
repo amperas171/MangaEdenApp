@@ -1,8 +1,11 @@
-package com.amperas17.mangaedenapp.ui.gallery;
+package com.amperas17.mangaedenapp.ui.gallery.view;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,7 +14,9 @@ import android.view.WindowManager;
 
 import com.amperas17.mangaedenapp.R;
 import com.amperas17.mangaedenapp.data.ChapterRepository;
+import com.amperas17.mangaedenapp.model.Resource;
 import com.amperas17.mangaedenapp.model.page.Page;
+import com.amperas17.mangaedenapp.ui.gallery.viewmodel.ChapterPagesViewModel;
 import com.amperas17.mangaedenapp.ui.zoominggallery.ZoomImageActivity;
 
 import java.util.ArrayList;
@@ -24,13 +29,12 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterRe
     public static final int ZOOM_ACTIVITY_REQUEST_CODE = 101;
     public static final String POSITION_TAG = "position";
 
-    private ChapterRepository chapterRepository;
+    private ChapterPagesViewModel viewModel;
 
     private PageAdapter galleryAdapter;
     private RecyclerView recyclerView;
 
     private ArrayList<Page> pageList = new ArrayList<>();
-    private String chapterID;
 
     public static Intent newIntent(Context context, String chapterID, String chapterTitle) {
         Intent intent = new Intent(context, ChapterPagesActivity.class);
@@ -44,17 +48,25 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chapter_pages);
 
-        chapterRepository = new ChapterRepository(this);
-
-        chapterID = getIntent().getExtras().getString(CHAPTER_ID_TAG);
+        String chapterID = getIntent().getExtras().getString(CHAPTER_ID_TAG);
         String chapterTitle = getIntent().getExtras().getString(CHAPTER_TITLE_TAG);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        initActionBar();
+        initAdapter();
+        initViewModel();
+
+        callDataRequest(chapterID);
+    }
+
+    private void initActionBar() {
         if (getSupportActionBar() != null)
             getSupportActionBar().hide();
+    }
 
+    private void initAdapter() {
         recyclerView = findViewById(R.id.recycler_view);
         galleryAdapter = new PageAdapter(new PageAdapter.OnItemClickListener() {
             @Override
@@ -72,8 +84,25 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterRe
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(galleryAdapter);
+    }
 
-        callDataRequest();
+    private void initViewModel() {
+        viewModel = ViewModelProviders.of(this).get(ChapterPagesViewModel.class);
+        viewModel.getResource().observe(this, new Observer<Resource<ArrayList<Page>>>() {
+            @Override
+            public void onChanged(@Nullable Resource<ArrayList<Page>> resource) {
+                onResourceChanged(resource);
+            }
+        });
+    }
+
+    private void onResourceChanged(Resource<ArrayList<Page>> resource) {
+        if (resource != null) {
+            if (resource.getData() != null)
+                onGetData(resource.getData());
+            if (resource.getThrowable() != null)
+                onError(resource.getThrowable());
+        }
     }
 
     @Override
@@ -86,8 +115,8 @@ public class ChapterPagesActivity extends AppCompatActivity implements ChapterRe
         }
     }
 
-    private void callDataRequest() {
-        chapterRepository.callData(chapterID);
+    private void callDataRequest(String chapterID) {
+        viewModel.startLoading(chapterID);
     }
 
     private void addDataToAdapter(ArrayList<Page> list) {
