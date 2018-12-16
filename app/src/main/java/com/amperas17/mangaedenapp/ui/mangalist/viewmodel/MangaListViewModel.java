@@ -1,70 +1,55 @@
 package com.amperas17.mangaedenapp.ui.mangalist.viewmodel;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
 
 import com.amperas17.mangaedenapp.data.MangaListRepository;
 import com.amperas17.mangaedenapp.model.manga.Manga;
 import com.amperas17.mangaedenapp.model.Resource;
-import com.amperas17.mangaedenapp.utils.Caller;
+import com.amperas17.mangaedenapp.ui.BaseViewModel;
 
 
 import java.util.ArrayList;
 
-public class MangaListViewModel extends ViewModel implements Caller<ArrayList<Manga>>, FindHandler.Caller {
+public class MangaListViewModel extends BaseViewModel<ArrayList<Manga>> implements FindHandler.Caller {
 
-    private MutableLiveData<Resource<ArrayList<Manga>>> resource;
     private MangaListRepository repository;
     private FindHandler handler;
 
     private ArrayList<Manga> mangaListAll = new ArrayList<>();
-    private boolean isLoading;
 
     public LiveData<Resource<ArrayList<Manga>>> getResource() {
-        if (resource == null) {
-            resource = new MutableLiveData<>();
-        }
         if (repository == null) {
             repository = new MangaListRepository(this);
         }
         if (handler == null) {
             handler = new FindHandler(this);
         }
-        return resource;
+        return super.getResource();
     }
 
     private void loadData() {
-        isLoading = true;
         repository.callData();
     }
 
     public void startLoading() {
-        if (!isLoading)
-            loadData();
+        super.startLoading();
+        loadData();
     }
 
     public void stopLoading() {
-        if (isLoading)
-            repository.cancelDataRequest();
+        super.stopLoading();
+        repository.cancelDataRequest();
     }
 
     @Override
     public void onGetData(ArrayList<Manga> mangaList) {
-        resource.postValue(new Resource<>(mangaList));
         updateMangaListAll(mangaList);
-        isLoading = false;
+        super.onGetData(mangaList);
     }
 
     private void updateMangaListAll(ArrayList<Manga> mangaList) {
         mangaListAll.clear();
         mangaListAll.addAll(mangaList);
-    }
-
-    @Override
-    public void onError(Throwable t) {
-        resource.postValue(new Resource<ArrayList<Manga>>(t));
-        isLoading = false;
     }
 
 
@@ -81,8 +66,7 @@ public class MangaListViewModel extends ViewModel implements Caller<ArrayList<Ma
 
     @Override
     public void postSearchResult(ArrayList<Manga> mangaList) {
-        resource.postValue(new Resource<>(mangaList));
-        isLoading = false;
+        super.onGetData(mangaList);
     }
 
     private void runSearchInNewThread(final String pattern) {
@@ -102,7 +86,6 @@ public class MangaListViewModel extends ViewModel implements Caller<ArrayList<Ma
     @Override
     protected void onCleared() {
         super.onCleared();
-        stopLoading();
         handler.removeMessages(0);
     }
 }
