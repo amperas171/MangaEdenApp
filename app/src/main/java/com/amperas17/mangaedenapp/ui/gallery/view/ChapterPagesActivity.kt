@@ -2,7 +2,6 @@ package com.amperas17.mangaedenapp.ui.gallery.view
 
 import android.app.Activity
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -17,6 +16,7 @@ import com.amperas17.mangaedenapp.ui.gallery.viewmodel.ChapterPagesViewModel
 import com.amperas17.mangaedenapp.ui.zoominggallery.ZoomImageActivity
 import com.amperas17.mangaedenapp.utils.hideStatusBar
 import kotlinx.android.synthetic.main.activity_chapter_pages.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 import java.util.ArrayList
 
@@ -39,7 +39,7 @@ class ChapterPagesActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var viewModel: ChapterPagesViewModel
+    private val viewModel by viewModel<ChapterPagesViewModel>()
     private lateinit var galleryAdapter: PageAdapter
 
     private val pageList = ArrayList<Page>()
@@ -77,7 +77,6 @@ class ChapterPagesActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(ChapterPagesViewModel::class.java)
         viewModel.getResource().observe(this, Observer { resource -> onResourceChanged(resource) })
     }
 

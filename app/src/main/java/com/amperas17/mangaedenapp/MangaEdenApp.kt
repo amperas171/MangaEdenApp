@@ -2,6 +2,7 @@ package com.amperas17.mangaedenapp
 
 import android.app.Application
 import com.amperas17.mangaedenapp.di.apiModule
+import com.amperas17.mangaedenapp.di.appModule
 import org.koin.android.ext.android.startKoin
 
 
@@ -9,6 +10,6 @@ class MangaEdenApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin(this, listOf(apiModule))
+        startKoin(this, listOf(apiModule, appModule))
     }
 }

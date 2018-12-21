@@ -1,7 +1,6 @@
 package com.amperas17.mangaedenapp.ui.mangafull.view
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -25,6 +24,7 @@ import com.amperas17.mangaedenapp.utils.AdapterItemClickListener
 import com.amperas17.mangaedenapp.utils.formatDefaultFromSeconds
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_manga_full.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 import java.util.ArrayList
 
@@ -44,7 +44,7 @@ class MangaFullActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var viewModel: MangaFullViewModel
+    private val viewModel by viewModel<MangaFullViewModel>()
     private lateinit var chapterAdapter: ChapterAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +81,6 @@ class MangaFullActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MangaFullViewModel::class.java)
         viewModel.getResource().observe(this, Observer { resource -> onResourceChanged(resource) })
     }
 

@@ -1,7 +1,6 @@
 package com.amperas17.mangaedenapp.ui.mangalist.view
 
 import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
@@ -18,6 +17,7 @@ import com.amperas17.mangaedenapp.model.Resource
 import com.amperas17.mangaedenapp.ui.mangalist.viewmodel.MangaListViewModel
 import com.amperas17.mangaedenapp.utils.AdapterItemClickListener
 import kotlinx.android.synthetic.main.activity_manga_list.*
+import org.koin.android.viewmodel.ext.android.viewModel
 
 import java.util.ArrayList
 
@@ -34,7 +34,7 @@ class MangaListActivity : AppCompatActivity() {
         const val IS_SEARCHING_TAG = "isSearching"
     }
 
-    private lateinit var viewModel: MangaListViewModel
+    private val viewModel by viewModel<MangaListViewModel>()
     private lateinit var mangaAdapter: MangaAdapter
 
     private lateinit var searchView: SearchView
@@ -80,7 +80,6 @@ class MangaListActivity : AppCompatActivity() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this).get(MangaListViewModel::class.java)
         viewModel.getResource().observe(this, Observer { resource -> onResourceChanged(resource) })
     }
 

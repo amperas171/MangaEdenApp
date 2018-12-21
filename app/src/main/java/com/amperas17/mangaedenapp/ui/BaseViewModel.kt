@@ -7,7 +7,7 @@ import android.arch.lifecycle.ViewModel
 import com.amperas17.mangaedenapp.model.Resource
 import com.amperas17.mangaedenapp.utils.Caller
 
-open class BaseViewModel<T> : ViewModel(), Caller<T> {
+abstract class BaseViewModel<T> : ViewModel(), Caller<T> {
 
     val resource: MutableLiveData<Resource<T>> = MutableLiveData()
 
